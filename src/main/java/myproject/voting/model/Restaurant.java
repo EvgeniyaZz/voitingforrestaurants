@@ -14,5 +14,5 @@ public class Restaurant extends AbstractNamedEntity implements HasId {
     private List<Meal> menu;
 
     @Column(name = "added")
-    private Date date;
+    private Date added;
 }

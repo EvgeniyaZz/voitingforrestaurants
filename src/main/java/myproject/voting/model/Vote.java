@@ -10,8 +10,8 @@ import myproject.voting.HasId;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "voice")
-public class Voice extends AbstractBaseEntity implements HasId {
+@Table(name = "vote")
+public class Vote extends AbstractBaseEntity implements HasId {
 
     @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
