@@ -1,11 +1,11 @@
-package myproject.voting.model;
+package project.voting.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import myproject.voting.HasId;
+import project.voting.HasId;
 
 import java.time.LocalDateTime;
 

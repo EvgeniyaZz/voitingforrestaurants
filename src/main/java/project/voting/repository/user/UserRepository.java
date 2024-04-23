@@ -1,6 +1,6 @@
-package myproject.voting.repository;
+package project.voting.repository.user;
 
-import myproject.voting.model.User;
+import project.voting.model.User;
 
 import java.util.List;
 

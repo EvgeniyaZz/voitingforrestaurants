@@ -1,4 +1,4 @@
-package myproject.voting.model;
+package project.voting.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -11,7 +11,7 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     @Column(name = "name", nullable = false)
     protected String name;
 
-    public AbstractNamedEntity() {
+    protected AbstractNamedEntity() {
     }
 
     protected AbstractNamedEntity(Integer id, String name) {

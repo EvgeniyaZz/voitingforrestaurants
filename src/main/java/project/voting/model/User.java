@@ -1,7 +1,7 @@
-package myproject.voting.model;
+package project.voting.model;
 
 import org.springframework.lang.NonNull;
-import myproject.voting.HasIdAndEmail;
+import project.voting.HasIdAndEmail;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;

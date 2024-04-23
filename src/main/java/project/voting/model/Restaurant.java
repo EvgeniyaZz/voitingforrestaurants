@@ -1,6 +1,6 @@
-package myproject.voting.model;
+package project.voting.model;
 
-import myproject.voting.HasId;
+import project.voting.HasId;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,4 +15,11 @@ public class Restaurant extends AbstractNamedEntity implements HasId {
 
     @Column(name = "added")
     private Date added;
+
+    public Restaurant() {
+    }
+
+    public Restaurant(Integer id, String name) {
+        super(id, name);
+    }
 }

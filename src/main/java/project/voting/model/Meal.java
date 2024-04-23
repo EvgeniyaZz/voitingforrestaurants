@@ -1,6 +1,6 @@
-package myproject.voting.model;
+package project.voting.model;
 
-import myproject.voting.HasId;
+import project.voting.HasId;
 
 import javax.persistence.*;
 
@@ -13,4 +13,12 @@ public class Meal extends AbstractNamedEntity implements HasId {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Restaurant restaurant;
+
+    public Meal() {
+    }
+
+    public Meal(Integer id, String name, int price) {
+        super(id, name);
+        this.price = price;
+    }
 }

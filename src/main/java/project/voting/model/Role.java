@@ -1,4 +1,4 @@
-package myproject.voting.model;
+package project.voting.model;
 
 public enum Role {
     USER,

@@ -1,6 +1,6 @@
-package myproject.voting.repository;
+package project.voting.repository.user;
 
-import myproject.voting.model.User;
+import project.voting.model.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 

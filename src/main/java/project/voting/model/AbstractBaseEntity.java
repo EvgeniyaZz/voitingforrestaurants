@@ -1,6 +1,6 @@
-package myproject.voting.model;
+package project.voting.model;
 
-import myproject.voting.HasId;
+import project.voting.HasId;
 
 import javax.persistence.*;
 import java.util.Objects;

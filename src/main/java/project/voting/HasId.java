@@ -1,4 +1,4 @@
-package myproject.voting;
+package project.voting;
 
 import org.springframework.util.Assert;
 
