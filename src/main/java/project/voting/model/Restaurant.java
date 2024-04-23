@@ -22,4 +22,13 @@ public class Restaurant extends AbstractNamedEntity implements HasId {
     public Restaurant(Integer id, String name) {
         super(id, name);
     }
+
+    public Restaurant(Integer id, String name, Date added) {
+        super(id, name);
+        this.added = added;
+    }
+
+    public void setMenu(List<Meal> menu) {
+        this.menu = menu;
+    }
 }

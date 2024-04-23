@@ -50,8 +50,8 @@ CREATE TABLE vote
     user_id       INTEGER                 NOT NULL,
     restaurant_id INTEGER                 NOT NULL,
     date_time     TIMESTAMP DEFAULT now() NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES USERS (id),
-    FOREIGN KEY (restaurant_id) REFERENCES RESTAURANT (id)
+    FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE,
+    FOREIGN KEY (restaurant_id) REFERENCES RESTAURANT (id) ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX user_unique_voice_date_time_idx
     ON vote (user_id, date_time)
