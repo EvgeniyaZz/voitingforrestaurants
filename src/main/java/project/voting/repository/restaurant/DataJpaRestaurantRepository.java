@@ -4,7 +4,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import project.voting.model.Restaurant;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -44,7 +44,7 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     }
 
     @Override
-    public List<Restaurant> getByDate(Date added) {
+    public List<Restaurant> getByDate(LocalDate added) {
         return crudRestaurantRepository.getByDate(added);
     }
 }

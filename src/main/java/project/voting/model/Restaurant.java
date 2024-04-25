@@ -1,9 +1,10 @@
 package project.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import project.voting.HasId;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -11,24 +12,38 @@ import java.util.List;
 public class Restaurant extends AbstractNamedEntity implements HasId {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @JsonManagedReference
     private List<Meal> menu;
 
     @Column(name = "added")
-    private Date added;
+    private LocalDate added;
 
     public Restaurant() {
     }
 
-    public Restaurant(Integer id, String name) {
-        super(id, name);
+    public Restaurant(Restaurant restaurant) {
+        this(restaurant.id, restaurant.name, restaurant.added);
     }
 
-    public Restaurant(Integer id, String name, Date added) {
+    public Restaurant(Integer id, String name) {
+        this(id, name, LocalDate.now());
+    }
+
+    public Restaurant(Integer id, String name, LocalDate added) {
         super(id, name);
         this.added = added;
     }
 
     public void setMenu(List<Meal> menu) {
         this.menu = menu;
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", added=" + added +
+                '}';
     }
 }

@@ -2,7 +2,7 @@ package project.voting.repository.restaurant;
 
 import project.voting.model.Restaurant;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface RestaurantRepository {
@@ -17,5 +17,5 @@ public interface RestaurantRepository {
 
     Restaurant getWithMeals(int id);
 
-    public List<Restaurant> getByDate(Date added);
+    List<Restaurant> getByDate(LocalDate added);
 }

@@ -7,7 +7,7 @@ import project.voting.service.AbstractServiceTest;
 import project.voting.service.RestaurantService;
 import project.voting.util.exception.NotFoundException;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static project.voting.RestaurantTestData.*;
@@ -52,6 +52,6 @@ class RestaurantServiceTest extends AbstractServiceTest {
 
     @Test
     void getByDate() {
-        RESTAURANT_MATCHER.assertMatch(restaurantService.getByDate(new Date()), restaurants);
+        RESTAURANT_MATCHER.assertMatch(restaurantService.getByDate(LocalDate.now()), restaurants);
     }
 }

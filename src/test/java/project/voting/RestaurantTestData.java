@@ -2,7 +2,7 @@ package project.voting;
 
 import project.voting.model.Restaurant;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,6 +32,12 @@ public class RestaurantTestData {
     }
 
     public static Restaurant getNew() {
-        return new Restaurant(null, "newRestaurant", new Date());
+        return new Restaurant(null, "newRestaurant", LocalDate.now());
+    }
+
+    public static Restaurant getUpdated() {
+        Restaurant updated = new Restaurant(restaurant1);
+        updated.setName("New Name");
+        return updated;
     }
 }

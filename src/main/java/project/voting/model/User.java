@@ -49,6 +49,10 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
         setRoles(roles);
     }
 
+    public User(Integer id, String name, String email, String password, Role... roles) {
+        this(id, name, email, password,  true, new Date(), List.of(roles));
+    }
+
     public void setRoles(Collection<Role> roles) {
         this.roles = roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
@@ -58,8 +62,18 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
         return email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String toString() {
-        return "User:" + id + '[' + email + ']';
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", enabled=" + enabled +
+                ", roles=" + roles +
+                '}';
     }
 }

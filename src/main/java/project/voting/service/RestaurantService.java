@@ -6,7 +6,7 @@ import org.springframework.util.Assert;
 import project.voting.model.Restaurant;
 import project.voting.repository.restaurant.DataJpaRestaurantRepository;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static project.voting.util.ValidationUtil.checkNotFoundWithId;
@@ -15,30 +15,35 @@ import static project.voting.util.ValidationUtil.checkNotFoundWithId;
 public class RestaurantService {
 
     @Autowired
-    DataJpaRestaurantRepository dataJpaRestaurantRepository;
+    DataJpaRestaurantRepository restaurantRepository;
 
     public Restaurant create(Restaurant restaurant) {
         Assert.notNull(restaurant, "restaurant must not be null");
-        return dataJpaRestaurantRepository.save(restaurant);
+        return restaurantRepository.save(restaurant);
+    }
+
+    public void update(Restaurant restaurant) {
+        Assert.notNull(restaurant, "restaurant must not be null");
+        restaurantRepository.save(restaurant);
     }
 
     public void delete(int id) {
-        checkNotFoundWithId(dataJpaRestaurantRepository.delete(id), id);
+        checkNotFoundWithId(restaurantRepository.delete(id), id);
     }
 
     public Restaurant get(int id) {
-        return checkNotFoundWithId(dataJpaRestaurantRepository.get(id), id);
+        return checkNotFoundWithId(restaurantRepository.get(id), id);
     }
 
     public List<Restaurant> getAll() {
-        return dataJpaRestaurantRepository.getAll();
+        return restaurantRepository.getAll();
     }
 
     public Restaurant getWithMeals(int id) {
-        return checkNotFoundWithId(dataJpaRestaurantRepository.getWithMeals(id), id);
+        return checkNotFoundWithId(restaurantRepository.getWithMeals(id), id);
     }
 
-    public List<Restaurant> getByDate(Date date) {
-        return dataJpaRestaurantRepository.getByDate(date);
+    public List<Restaurant> getByDate(LocalDate date) {
+        return restaurantRepository.getByDate(date);
     }
 }

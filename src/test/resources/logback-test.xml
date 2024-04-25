@@ -11,6 +11,10 @@
         </encoder>
     </appender>
 
+    <logger name="result" level="INFO" additivity="false">
+        <appender-ref ref="result"/>
+    </logger>
+
     <logger name="project.voting" level="debug"/>
 
     <root level="INFO">

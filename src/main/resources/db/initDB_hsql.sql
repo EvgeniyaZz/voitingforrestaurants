@@ -34,6 +34,8 @@ CREATE TABLE restaurant
     name  VARCHAR(255)       NOT NULL,
     added DATE DEFAULT now() NOT NULL
 );
+CREATE UNIQUE INDEX restaurant_unique_date_idx
+    ON restaurant (name, added);
 
 CREATE TABLE meal
 (
@@ -43,6 +45,8 @@ CREATE TABLE meal
     restaurant_id INTEGER      NOT NULL,
     FOREIGN KEY (restaurant_id) REFERENCES restaurant (id) ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX meal_restaurant_unique_date_idx
+    ON meal (name, restaurant_id);
 
 CREATE TABLE vote
 (

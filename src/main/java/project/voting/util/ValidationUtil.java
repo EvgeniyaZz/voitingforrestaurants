@@ -1,5 +1,7 @@
 package project.voting.util;
 
+import project.voting.HasId;
+import project.voting.util.exception.IllegalRequestDataException;
 import project.voting.util.exception.NotFoundException;
 
 public class ValidationUtil {
@@ -16,6 +18,12 @@ public class ValidationUtil {
     public static void checkNotFound(boolean found, String msg) {
         if (!found) {
             throw new NotFoundException("Not found entity with " + msg);
+        }
+    }
+
+    public static void checkNew(HasId bean) {
+        if (!bean.isNew()) {
+            throw new IllegalRequestDataException(bean + " must be new (id=null)");
         }
     }
 }
