@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import project.voting.model.Restaurant;
-import project.voting.repository.restaurant.DataJpaRestaurantRepository;
+import project.voting.repository.restaurant.RestaurantRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +15,7 @@ import static project.voting.util.ValidationUtil.checkNotFoundWithId;
 public class RestaurantService {
 
     @Autowired
-    DataJpaRestaurantRepository restaurantRepository;
+    RestaurantRepository restaurantRepository;
 
     public Restaurant create(Restaurant restaurant) {
         Assert.notNull(restaurant, "restaurant must not be null");

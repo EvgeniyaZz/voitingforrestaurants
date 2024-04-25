@@ -82,7 +82,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getWithMeals() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT1_ID + "/with-meals"))
+        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT1_ID + "/meals"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

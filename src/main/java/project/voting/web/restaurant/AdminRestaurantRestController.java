@@ -17,6 +17,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
+import static project.voting.util.ValidationUtil.assureIdConsistent;
 import static project.voting.util.ValidationUtil.checkNew;
 
 @RestController
@@ -38,15 +39,16 @@ public class AdminRestaurantRestController {
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
+                .buildAndExpand(created.id()).toUri();
 
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Restaurant restaurant) {
-        log.info("update {}", restaurant);
+    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
+        log.info("update {} with id={}", restaurant, id);
+        assureIdConsistent(restaurant, id);
         restaurantService.update(restaurant);
     }
 
@@ -63,7 +65,7 @@ public class AdminRestaurantRestController {
         return restaurantService.get(id);
     }
 
-    @GetMapping("/{id}/with-meals")
+    @GetMapping("/{id}/meals")
     public Restaurant getWithMeals(@PathVariable int id) {
         log.info("get restaurant {} with meals", id);
         return restaurantService.getWithMeals(id);

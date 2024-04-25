@@ -28,6 +28,13 @@ class RestaurantServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    void update() {
+        Restaurant updated = getUpdated();
+        restaurantService.update(updated);
+        RESTAURANT_MATCHER.assertMatch(restaurantService.get(RESTAURANT1_ID), getUpdated());
+    }
+
+    @Test
     void delete() {
         restaurantService.delete(RESTAURANT1_ID);
         assertThrows(NotFoundException.class, () -> restaurantService.get(RESTAURANT1_ID));
