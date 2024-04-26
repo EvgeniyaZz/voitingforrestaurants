@@ -24,7 +24,7 @@ import static project.voting.util.ValidationUtil.checkNew;
 @RequestMapping(value = AdminRestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestaurantRestController {
 
-    static final String REST_URL = "/admin/restaurants";
+    public static final String REST_URL = "/admin/restaurants";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 

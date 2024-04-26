@@ -21,7 +21,7 @@ import static project.voting.util.ValidationUtil.checkNew;
 @RequestMapping(value = AdminMealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminMealRestController {
 
-    static final String REST_URL = "/admin/restaurants/{restaurantId}/meals";
+    public static final String REST_URL = "/admin/restaurants/{restaurantId}/meals";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -36,7 +36,8 @@ public class AdminMealRestController {
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(created.id()).toUri();
+                .buildAndExpand(restaurantId, created.id())
+                .toUri();
 
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
@@ -53,7 +54,7 @@ public class AdminMealRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("delete meal {} in restaurant {}", id, restaurantId);
-        mealService.delete(restaurantId, id);
+        mealService.delete(id, restaurantId);
     }
 
     @GetMapping("/{id}")

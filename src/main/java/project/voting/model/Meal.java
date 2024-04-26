@@ -32,6 +32,10 @@ public class Meal extends AbstractNamedEntity implements HasId {
         this.restaurant = restaurant;
     }
 
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
     @Override
     public String toString() {
         return "Meal{" +
