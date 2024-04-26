@@ -4,7 +4,10 @@ import org.springframework.lang.NonNull;
 import project.voting.HasIdAndEmail;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 @Entity
@@ -40,6 +43,14 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
     public User() {
     }
 
+    public User(User user) {
+        this(user.id, user.name, user.email, user.password, user.enabled, user.registered, user.roles);
+    }
+
+    public User(Integer id, String name, String email, String password, Role... roles) {
+        this(id, name, email, password, true, new Date(), List.of(roles));
+    }
+
     public User(Integer id, String name, String email, String password, boolean enabled, Date registered, @NonNull Collection<Role> roles) {
         super(id, name);
         this.email = email;
@@ -49,8 +60,16 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
         setRoles(roles);
     }
 
-    public User(Integer id, String name, String email, String password, Role... roles) {
-        this(id, name, email, password,  true, new Date(), List.of(roles));
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setRoles(Collection<Role> roles) {
@@ -64,6 +83,18 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public Date getRegistered() {
+        return registered;
     }
 
     @Override
