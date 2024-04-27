@@ -1,13 +1,13 @@
 package project.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.NonNull;
 import project.voting.HasIdAndEmail;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.*;
 
 @Entity
@@ -39,6 +39,11 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles = EnumSet.noneOf(Role.class);
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonManagedReference
+    private List<Vote> votes;
 
     public User() {
     }
@@ -76,6 +81,10 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
         this.roles = roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
 
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
     @Override
     public String getEmail() {
         return email;
@@ -95,6 +104,10 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     public Date getRegistered() {
         return registered;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
     }
 
     @Override

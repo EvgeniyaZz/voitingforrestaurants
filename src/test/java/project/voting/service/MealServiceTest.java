@@ -1,10 +1,8 @@
-package project.voting.service.restaurant;
+package project.voting.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import project.voting.model.Meal;
-import project.voting.service.AbstractServiceTest;
-import project.voting.service.MealService;
 import project.voting.util.exception.NotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

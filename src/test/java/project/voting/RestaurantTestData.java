@@ -11,10 +11,10 @@ import static project.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class RestaurantTestData {
 
-    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menu", "added");
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "menu", "votes", "added");
 
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_MENU_MATCHER = MatcherFactory.usingAssertions(Restaurant.class,
-            (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("added", "menu.restaurant").isEqualTo(e),
+            (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("added", "menu.restaurant", "votes").isEqualTo(e),
             (a, e) -> {
                 throw new UnsupportedOperationException();
             });

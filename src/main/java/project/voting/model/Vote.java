@@ -1,19 +1,73 @@
 package project.voting.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import project.voting.HasId;
 
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "vote")
+@Table(name = "vote", uniqueConstraints = @UniqueConstraint(columnNames = {"registered", "user_id"}, name = "user_unique_voice_date_idx"))
 public class Vote extends AbstractBaseEntity implements HasId {
 
-    @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()")
+    @Column(name = "registered", nullable = false)
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDate registered;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
+    @JsonBackReference
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
+    @JsonBackReference
+    private Restaurant restaurant;
+
+    public Vote() {
+    }
+
+    public Vote(Integer id, LocalDate registered) {
+        super(id);
+        this.registered = registered;
+    }
+
+    public LocalDate getRegistered() {
+        return registered;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRegistered(LocalDate registered) {
+        this.registered = registered;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "id=" + id +
+                ", registered=" + registered +
+                '}';
+    }
 }

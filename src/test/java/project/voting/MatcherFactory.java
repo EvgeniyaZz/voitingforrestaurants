@@ -43,6 +43,11 @@ public class MatcherFactory {
             iterableAssertion.accept(actual, expected);
         }
 
+        @SafeVarargs
+        public final void assertMatch(Iterable<T> actual, T... expected) {
+            assertMatch(actual, List.of(expected));
+        }
+
         public ResultMatcher contentJson(T expected) {
             return result -> assertMatch(JsonUtil.readValue(getContent(result), clazz), expected);
         }
