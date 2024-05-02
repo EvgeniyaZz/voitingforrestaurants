@@ -16,7 +16,7 @@ public class Restaurant extends AbstractNamedEntity implements HasId {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference
+    @JsonManagedReference(value = "restaurant-meal")
     private List<Meal> menu;
 
     @Column(name = "added", nullable = false)
@@ -25,7 +25,7 @@ public class Restaurant extends AbstractNamedEntity implements HasId {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference
+    @JsonManagedReference(value = "restaurant-vote")
     private List<Vote> votes;
 
     public Restaurant() {
@@ -44,8 +44,28 @@ public class Restaurant extends AbstractNamedEntity implements HasId {
         this.added = added;
     }
 
+    public List<Meal> getMenu() {
+        return menu;
+    }
+
+    public LocalDate getAdded() {
+        return added;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
     public void setMenu(List<Meal> menu) {
         this.menu = menu;
+    }
+
+    public void setAdded(LocalDate added) {
+        this.added = added;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
     }
 
     @Override

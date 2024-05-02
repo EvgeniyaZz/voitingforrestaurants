@@ -42,7 +42,7 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference
+    @JsonManagedReference(value = "user-vote")
     private List<Vote> votes;
 
     public User() {

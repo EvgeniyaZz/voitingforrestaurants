@@ -1,6 +1,5 @@
 package project.voting.web.restaurant;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,8 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static project.voting.RestaurantTestData.*;
 import static project.voting.web.json.JsonUtil.writeValue;
 
-// TODO fix the tests
-@Disabled
 class AdminRestaurantRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = AdminRestaurantRestController.REST_URL + "/";

@@ -21,14 +21,14 @@ public class Vote extends AbstractBaseEntity implements HasId {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
-    @JsonBackReference
+    @JsonBackReference(value = "user-vote")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
-    @JsonBackReference
+    @JsonBackReference(value = "restaurant-vote")
     private Restaurant restaurant;
 
     public Vote() {
