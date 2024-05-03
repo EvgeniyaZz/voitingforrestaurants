@@ -1,11 +1,12 @@
 package project.voting.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import project.voting.model.User;
 import project.voting.repository.user.UserRepository;
+import project.voting.to.UserTo;
+import project.voting.util.UserUtil;
 
 import java.util.List;
 
@@ -15,8 +16,11 @@ import static project.voting.util.ValidationUtil.checkNotFoundWithId;
 @Service
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User create(User user) {
         Assert.notNull(user, "user must not be null");
@@ -27,6 +31,13 @@ public class UserService {
         Assert.notNull(user, "user must not be null");
         userRepository.save(user);
     }
+
+    @Transactional
+    public void update(UserTo userTo) {
+        User user = get(userTo.id());
+        userRepository.save(UserUtil.updateFromTo(user, userTo));
+    }
+
 
     public void delete(int id) {
         checkNotFoundWithId(userRepository.delete(id), id);
