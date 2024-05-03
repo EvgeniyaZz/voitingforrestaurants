@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public class DataJpaVoteRepository implements VoteRepository {
 
+    private static final LocalTime FINAL_TIME = LocalTime.of(11, 0);
+
     private final CrudVoteRepository crudVoteRepository;
     private final CrudRestaurantRepository crudRestaurantRepository;
     private final CrudUserRepository crudUserRepository;
@@ -31,8 +33,10 @@ public class DataJpaVoteRepository implements VoteRepository {
             vote.setUser(crudUserRepository.getReferenceById(userId));
             return crudVoteRepository.save(vote);
         }
-        if (LocalTime.now().isBefore(LocalTime.of(11, 0))) {
-            return crudVoteRepository.updateByDate(restaurantId, vote.getRegistered());
+        if (LocalTime.now().isBefore(FINAL_TIME)) {
+            if(crudVoteRepository.updateByDate(restaurantId, vote.getRegistered(), userId) > 0) {
+                return get(vote.id(), userId, restaurantId);
+            }
         }
         return null;
     }
@@ -55,7 +59,17 @@ public class DataJpaVoteRepository implements VoteRepository {
     }
 
     @Override
-    public List<Vote> getAll() {
-        return crudVoteRepository.findAll();
+    public Vote getWithRestaurant(int id, int userId, int restaurantId) {
+        return crudVoteRepository.getWithRestaurant(id, userId, restaurantId);
+    }
+
+    @Override
+    public List<Vote> getAllByUser(int userId) {
+        return crudVoteRepository.getAllByUser(userId);
+    }
+
+    @Override
+    public List<Vote> getAllByRestaurant(int restaurantId) {
+        return crudVoteRepository.getAllByRestaurant(restaurantId);
     }
 }

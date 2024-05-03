@@ -1,5 +1,6 @@
 package project.voting.repository.vote;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.voting.model.Vote;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Transactional(readOnly = true)
 public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
@@ -20,6 +22,17 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
     @Query("SELECT v FROM Vote v WHERE v.user.id=:userId AND v.registered=:registered")
     Vote getByDate(@Param("userId") int userId, @Param("registered") LocalDate registered);
 
-    @Query("UPDATE Vote v SET v.restaurant.id=:restaurantId WHERE v.registered=:registered")
-    Vote updateByDate(@Param("restaurantId") int restaurantId, @Param("registered") LocalDate registered);
+    @Query("SELECT v FROM Vote v JOIN FETCH v.restaurant WHERE v.id= ?1 AND v.user.id= ?2 AND v.restaurant.id= ?3")
+    Vote getWithRestaurant(int id, int userId, int restaurantId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Vote v SET v.restaurant.id=:restaurantId WHERE v.registered=:registered AND v.user.id=:userId")
+    int updateByDate(@Param("restaurantId") int restaurantId, @Param("registered") LocalDate registered, @Param("userId") int userId);
+
+    @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.registered DESC")
+    List<Vote> getAllByUser(@Param("userId") int userId);
+
+    @Query("SELECT v FROM Vote v WHERE v.restaurant.id=:restaurantId ORDER BY v.registered DESC")
+    List<Vote> getAllByRestaurant(@Param("restaurantId") int restaurantId);
 }

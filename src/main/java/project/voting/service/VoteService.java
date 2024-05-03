@@ -1,6 +1,5 @@
 package project.voting.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import project.voting.model.Vote;
@@ -13,8 +12,11 @@ import static project.voting.util.ValidationUtil.checkNotFoundWithId;
 @Service
 public class VoteService {
 
-    @Autowired
-    VoteRepository voteRepository;
+    private final VoteRepository voteRepository;
+
+    public VoteService(VoteRepository voteRepository) {
+        this.voteRepository = voteRepository;
+    }
 
     public Vote create(Vote vote, int userId, int restaurantId) {
         Assert.notNull(vote, "vote must not be null");
@@ -34,7 +36,15 @@ public class VoteService {
         return checkNotFoundWithId(voteRepository.get(id, userId, restaurantId), id);
     }
 
-    public List<Vote> getAll() {
-        return voteRepository.getAll();
+    public Vote getWithRestaurant(int id, int userId, int restaurantId) {
+        return voteRepository.getWithRestaurant(id, userId, restaurantId);
+    }
+
+    public List<Vote> getAllByUser(int userId) {
+        return voteRepository.getAllByUser(userId);
+    }
+
+    public List<Vote> getAllByRestaurant(int restaurantId) {
+        return voteRepository.getAllByRestaurant(restaurantId);
     }
 }

@@ -15,5 +15,9 @@ public interface VoteRepository {
 
     Vote getByDate(int userId, LocalDate registered);
 
-    List<Vote> getAll();
+    List<Vote> getAllByUser(int userId);
+
+    List<Vote> getAllByRestaurant(int restaurantId);
+
+    Vote getWithRestaurant(int id, int userId, int restaurantId);
 }
