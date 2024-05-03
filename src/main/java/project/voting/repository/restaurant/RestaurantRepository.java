@@ -18,4 +18,6 @@ public interface RestaurantRepository {
     Restaurant getWithMeals(int id);
 
     List<Restaurant> getByDate(LocalDate added);
+
+    List<Restaurant> getWithMealsByDate(LocalDate added);
 }

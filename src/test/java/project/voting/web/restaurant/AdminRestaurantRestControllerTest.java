@@ -39,7 +39,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void create() throws Exception {
+    void createWithLocation() throws Exception {
         Restaurant newRestaurant = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -77,16 +77,16 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant2, restaurant1, restaurant3));
+                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1, restaurant2, restaurant3));
     }
 
     @Test
     void getWithMeals() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT1_ID + "/meals"))
+        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT1_ID + "/with-meals"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1));
+                .andExpect(RESTAURANT_WITH_MENU_MATCHER.contentJson(restaurant1));
     }
 
     @Test
@@ -97,5 +97,15 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(restaurant2, restaurant1, restaurant3));
+    }
+
+    @Test
+    void getWithMealsByDate() throws Exception{
+        perform(MockMvcRequestBuilders.get(REST_URL + "with-meals/date")
+                .param("added", LocalDate.now().toString()))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_WITH_MENU_MATCHER.contentJson(restaurant2, restaurant1, restaurant3));
     }
 }

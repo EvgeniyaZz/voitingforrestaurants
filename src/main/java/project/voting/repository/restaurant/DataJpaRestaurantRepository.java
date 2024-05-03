@@ -1,6 +1,5 @@
 package project.voting.repository.restaurant;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import project.voting.model.Restaurant;
 
@@ -9,8 +8,6 @@ import java.util.List;
 
 @Repository
 public class DataJpaRestaurantRepository implements RestaurantRepository {
-
-    private static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");
 
     private final CrudRestaurantRepository crudRestaurantRepository;
 
@@ -35,7 +32,7 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
 
     @Override
     public List<Restaurant> getAll() {
-        return crudRestaurantRepository.findAll(SORT_NAME);
+        return crudRestaurantRepository.getAll();
     }
 
     @Override
@@ -46,5 +43,10 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     @Override
     public List<Restaurant> getByDate(LocalDate added) {
         return crudRestaurantRepository.getByDate(added);
+    }
+
+    @Override
+    public List<Restaurant> getWithMealsByDate(LocalDate added) {
+        return crudRestaurantRepository.getWithMealsByDate(added);
     }
 }

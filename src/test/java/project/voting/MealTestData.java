@@ -26,7 +26,10 @@ public class MealTestData {
     public static final Meal meal10 = new Meal(MEAL1_ID + 9, "Большой зеленый салат", 790);
     public static final Meal meal11 = new Meal(MEAL1_ID + 10, "Брауни с карамелью и арахисом", 500);
 
-    public static final List<Meal> meals = List.of(meal1, meal2, meal3);
+    public static final List<Meal> meals1 = List.of(meal1, meal2, meal3);
+    public static final List<Meal> meals2 = List.of(meal4, meal5, meal6, meal7);
+    public static final List<Meal> meals3 = List.of(meal8, meal9, meal10, meal11);
+
     public static final List<Meal> allMeals = List.of(meal1, meal2, meal3, meal4, meal5, meal6, meal7, meal8, meal9, meal10, meal11);
 
     public static Meal getNew() {
