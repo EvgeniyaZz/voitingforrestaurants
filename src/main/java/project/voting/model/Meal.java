@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import project.voting.HasId;
-import project.voting.View;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,11 +19,15 @@ public class Meal extends AbstractNamedEntity implements HasId {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull(groups = View.Persist.class)
+    @NotNull
     @JsonBackReference(value = "restaurant-meal")
     private Restaurant restaurant;
 
     public Meal() {
+    }
+
+    public Meal(Meal meal) {
+        this(meal.id, meal.name, meal.price);
     }
 
     public Meal(Integer id, String name, int price) {

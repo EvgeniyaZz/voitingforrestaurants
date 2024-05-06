@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import project.voting.model.Meal;
 
+import java.util.List;
+
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
@@ -14,4 +16,7 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     @Transactional
     @Query("DELETE FROM Meal m WHERE m.id=:id AND m.restaurant.id=:restaurantId")
     int delete(@Param("id") int id, @Param("restaurantId") int restaurantId);
+
+    @Query("SELECT m FROM Meal m WHERE m.restaurant.id=:restaurantId")
+    List<Meal> getAll(@Param("restaurantId") int restaurantId);
 }

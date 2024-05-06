@@ -9,9 +9,9 @@ public interface VoteRepository {
 
     Vote save(Vote vote, int userId, int restaurantId);
 
-    boolean delete(int id, int userId, int restaurantId);
+    boolean delete(int id, int userId);
 
-    Vote get(int id, int userId, int restaurantId);
+    Vote get(int id, int userId);
 
     Vote getByDate(int userId, LocalDate registered);
 
@@ -19,5 +19,5 @@ public interface VoteRepository {
 
     List<Vote> getAllByRestaurant(int restaurantId);
 
-    Vote getWithRestaurant(int id, int userId, int restaurantId);
+    Vote getWithRestaurant(int id, int userId);
 }

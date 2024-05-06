@@ -19,7 +19,7 @@ public class RestaurantRestController extends AbstractRestaurantController {
         return super.get(id);
     }
 
-    @GetMapping("/{id}/meals")
+    @GetMapping("/{id}/with-meals")
     public Restaurant getWithMeals(@PathVariable int id) {
         return super.getWithMeals(id);
     }

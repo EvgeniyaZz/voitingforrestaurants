@@ -28,16 +28,16 @@ public class VoteService {
         checkNotFoundWithId(voteRepository.save(vote, userId, restaurantId), vote.id());
     }
 
-    public void delete(int id, int userId, int restaurantId) {
-        checkNotFoundWithId(voteRepository.delete(id, userId, restaurantId), id);
+    public void delete(int id, int userId) {
+        checkNotFoundWithId(voteRepository.delete(id, userId), id);
     }
 
-    public Vote get(int id, int userId, int restaurantId) {
-        return checkNotFoundWithId(voteRepository.get(id, userId, restaurantId), id);
+    public Vote get(int id, int userId) {
+        return checkNotFoundWithId(voteRepository.get(id, userId), id);
     }
 
-    public Vote getWithRestaurant(int id, int userId, int restaurantId) {
-        return voteRepository.getWithRestaurant(id, userId, restaurantId);
+    public Vote getWithRestaurant(int id, int userId) {
+        return voteRepository.getWithRestaurant(id, userId);
     }
 
     public List<Vote> getAllByUser(int userId) {

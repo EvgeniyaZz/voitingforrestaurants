@@ -34,9 +34,20 @@ public class Vote extends AbstractBaseEntity implements HasId {
     public Vote() {
     }
 
+    public Vote(Vote vote) {
+        this(vote.id, vote.getRegistered(), vote.getUser(), vote.getRestaurant());
+    }
+
     public Vote(Integer id, LocalDate registered) {
         super(id);
         this.registered = registered;
+    }
+
+    public Vote(Integer id, LocalDate registered, User user, Restaurant restaurant) {
+        this.id=id;
+        this.registered=registered;
+        this.user=user;
+        this.restaurant=restaurant;
     }
 
     public LocalDate getRegistered() {

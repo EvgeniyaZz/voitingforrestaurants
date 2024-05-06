@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import project.voting.MealTestData;
 import project.voting.model.Meal;
 import project.voting.model.Restaurant;
 import project.voting.service.MealService;
+import project.voting.to.MealTo;
+import project.voting.util.MealUtil;
 import project.voting.util.exception.NotFoundException;
 import project.voting.web.AbstractControllerTest;
 import project.voting.web.restaurant.AdminRestaurantRestController;
@@ -30,7 +31,8 @@ class AdminMealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void create() throws Exception {
-        Meal newMeal = MealTestData.getNew();
+        MealTo mealTo = new MealTo(null, "newMeal", 500);
+        Meal newMeal = MealUtil.createNewFromTo(mealTo);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newMeal)))
@@ -51,14 +53,14 @@ class AdminMealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void update() throws Exception {
-        Meal updated = MealTestData.getUpdated();
+        MealTo updatedTo = new MealTo(null, "newName", 333);
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeValue(updated)))
+                .content(writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, RESTAURANT1_ID), updated);
+        MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, RESTAURANT1_ID), MealUtil.updateFromTo(new Meal(meal1), updatedTo));
     }
 
     @Test
@@ -76,5 +78,14 @@ class AdminMealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_MATCHER.contentJson(meal1));
+    }
+
+    @Test
+    void getAll() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_MATCHER.contentJson(meals1));
     }
 }

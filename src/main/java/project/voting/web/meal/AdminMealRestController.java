@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import project.voting.model.Meal;
 import project.voting.service.MealService;
+import project.voting.to.MealTo;
+import project.voting.util.MealUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 import static project.voting.util.ValidationUtil.assureIdConsistent;
 import static project.voting.util.ValidationUtil.checkNew;
@@ -29,10 +32,10 @@ public class AdminMealRestController {
     MealService mealService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> create(@Valid @RequestBody Meal meal, @PathVariable int restaurantId) {
-        log.info("create {}", meal);
-        checkNew(meal);
-        Meal created = mealService.create(meal, restaurantId);
+    public ResponseEntity<Meal> create(@Valid @RequestBody MealTo mealTo, @PathVariable int restaurantId) {
+        log.info("create {}", mealTo);
+        checkNew(mealTo);
+        Meal created = mealService.create(MealUtil.createNewFromTo(mealTo), restaurantId);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -44,10 +47,11 @@ public class AdminMealRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody Meal meal, @PathVariable int restaurantId, @PathVariable int id) {
-        log.info("update meal {} in restaurant {}", meal, restaurantId);
-        assureIdConsistent(meal, id);
-        mealService.update(meal, restaurantId);
+    public void update(@Valid @RequestBody MealTo mealTo, @PathVariable int restaurantId, @PathVariable int id) {
+        log.info("update meal {} in restaurant {}", mealTo, restaurantId);
+        assureIdConsistent(mealTo, id);
+        Meal meal = mealService.get(id, restaurantId);
+        mealService.update(MealUtil.updateFromTo(meal, mealTo), restaurantId);
     }
 
     @DeleteMapping("/{id}")
@@ -61,5 +65,11 @@ public class AdminMealRestController {
     public Meal get(@PathVariable int restaurantId, @PathVariable int id) {
         log.info("get meal {} in restaurant {}", id, restaurantId);
         return mealService.get(id, restaurantId);
+    }
+
+    @GetMapping
+    public List<Meal> getAll(@PathVariable int restaurantId) {
+        log.info("get all meal in restaurant {}", restaurantId);
+        return mealService.getAll(restaurantId);
     }
 }

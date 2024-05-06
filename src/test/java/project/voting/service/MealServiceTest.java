@@ -45,6 +45,6 @@ class MealServiceTest extends AbstractServiceTest {
 
     @Test
     void getAll() {
-        MEAL_MATCHER.assertMatch(mealService.getAll(), allMeals);
+        MEAL_MATCHER.assertMatch(mealService.getAll(RESTAURANT1_ID), meals1);
     }
 }
