@@ -36,7 +36,7 @@ class VoteServiceTest extends AbstractServiceTest {
         if(LocalTime.now().isBefore(FINAL_TIME)) {
             voteService.update(updated, USER1_ID, RESTAURANT3_ID);
             Vote getUpdated = voteService.getWithRestaurant(VOTE_ID, USER1_ID);
-            VOTE_WITH_RESTAURANT_AND_USER_MATCHER.assertMatch(getUpdated, VoteTestData.getUpdated());
+            VOTE_WITH_RESTAURANT_MATCHER.assertMatch(getUpdated, VoteTestData.getUpdated());
             RESTAURANT_MATCHER.assertMatch(getUpdated.getRestaurant(), restaurant3);
             USER_MATCHER.assertMatch(getUpdated.getUser(), user1);
         } else {
@@ -59,7 +59,7 @@ class VoteServiceTest extends AbstractServiceTest {
     @Test
     void getWithRestaurant() {
         Vote vote = voteService.getWithRestaurant(VOTE_ID, USER1_ID);
-        VOTE_MATCHER.assertMatch(vote, vote1);
+        VOTE_WITH_RESTAURANT_MATCHER.assertMatch(vote, vote1);
         RESTAURANT_MATCHER.assertMatch(vote.getRestaurant(), restaurant1);
     }
 

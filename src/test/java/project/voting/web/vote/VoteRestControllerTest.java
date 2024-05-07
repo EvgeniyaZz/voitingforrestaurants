@@ -62,7 +62,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                     .andDo(print())
                     .andExpect(status().isNoContent());
 
-            VOTE_WITH_RESTAURANT_AND_USER_MATCHER.assertMatch(voteService.get(VOTE_ID, USER1_ID), VoteUtil.updateFromTo(new Vote(vote1), updatedTo));
+            VOTE_WITH_RESTAURANT_MATCHER.assertMatch(voteService.get(VOTE_ID, USER1_ID), VoteUtil.updateFromTo(new Vote(vote1), updatedTo));
         }
 
         //TODO make test for update vote after 11:00

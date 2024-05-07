@@ -37,7 +37,7 @@ public class VoteService {
     }
 
     public Vote getWithRestaurant(int id, int userId) {
-        return voteRepository.getWithRestaurant(id, userId);
+        return checkNotFoundWithId(voteRepository.getWithRestaurant(id, userId), id);
     }
 
     public List<Vote> getAllByUser(int userId) {

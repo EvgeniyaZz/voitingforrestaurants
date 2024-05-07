@@ -15,9 +15,9 @@ public class VoteTestData {
 
     public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "restaurant", "user");
 
-    public static final MatcherFactory.Matcher<Vote> VOTE_WITH_RESTAURANT_AND_USER_MATCHER = MatcherFactory.usingAssertions(Vote .class,
-            (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("registered", "restaurant.vote", "user.vote").isEqualTo(e),
-            (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorIgnoringFields("registered", "restaurant.vote", "user.vote").isEqualTo(e));
+    public static final MatcherFactory.Matcher<Vote> VOTE_WITH_RESTAURANT_MATCHER = MatcherFactory.usingAssertions(Vote .class,
+            (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("restaurant.votes", "restaurant.menu", "user").isEqualTo(e),
+            (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorIgnoringFields("restaurant.votes", "restaurant.menu", "user").isEqualTo(e));
 
     public static final int VOTE_ID = START_SEQ + 17;
 
