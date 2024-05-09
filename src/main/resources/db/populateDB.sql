@@ -7,9 +7,9 @@ DELETE FROM restaurant;
 ALTER SEQUENCE GLOBAL_SEQ RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
-VALUES ('User1', 'user@yandex.ru', 'password'),
-       ('Admin', 'admin@gmail.com', 'admin'),
-       ('User2', 'user2@gmail.com', 'user2');
+VALUES ('User1', 'user@yandex.ru', '{noop}password'),
+       ('Admin', 'admin@gmail.com', '{noop}admin'),
+       ('User2', 'user2@gmail.com', '{noop}user2');
 
 INSERT INTO user_role (role, user_id)
 VALUES ('USER', 100000),
@@ -37,5 +37,4 @@ VALUES ('Средиземноморский суп с морепродуктам
 
 INSERT INTO vote (USER_ID, RESTAURANT_ID)
 VALUES (100000, 100003),
-       (100001, 100004),
-       (100002, 100003);
+       (100001, 100004);

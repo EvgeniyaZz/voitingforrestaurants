@@ -6,9 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import project.voting.model.Vote;
-import project.voting.to.VoteTo;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -19,8 +17,8 @@ public class VoteRestController extends AbstractVoteController {
     public static final String REST_URL = "/restaurants/{restaurantId}/votes";
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> createWithLocation(@Valid @RequestBody VoteTo voteTo, @PathVariable int restaurantId) {
-        Vote created = super.create(voteTo, restaurantId);
+    public ResponseEntity<Vote> createWithLocation(@PathVariable int restaurantId) {
+        Vote created = super.create(restaurantId);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -33,8 +31,8 @@ public class VoteRestController extends AbstractVoteController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
-    public void update(@Valid @RequestBody VoteTo voteTo, @PathVariable int restaurantId, @PathVariable int id) {
-        super.update(voteTo, restaurantId, id);
+    public void update(@PathVariable int restaurantId, @PathVariable int id) {
+        super.update(restaurantId, id);
     }
 
     @DeleteMapping("/{id}")

@@ -7,7 +7,6 @@ import project.voting.model.Vote;
 import project.voting.util.exception.NotFoundException;
 
 import java.time.LocalTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static project.voting.RestaurantTestData.*;
@@ -22,23 +21,22 @@ class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     void create() {
-        Vote created = voteService.create(VoteTestData.getNew(), USER1_ID, RESTAURANT1_ID);
+        Vote created = voteService.create(VoteTestData.getNew(), USER2_ID, RESTAURANT1_ID);
         int newId = created.id();
         Vote newVote = VoteTestData.getNew();
         newVote.setId(newId);
         VOTE_MATCHER.assertMatch(created, newVote);
-        VOTE_MATCHER.assertMatch(voteService.get(newId, USER1_ID), newVote);
+        VOTE_MATCHER.assertMatch(voteService.get(newId, USER2_ID), newVote);
     }
 
     @Test
     void update() {
         Vote updated = VoteTestData.getUpdated();
-        if(LocalTime.now().isBefore(FINAL_TIME)) {
+        if (LocalTime.now().isBefore(FINAL_TIME)) {
             voteService.update(updated, USER1_ID, RESTAURANT3_ID);
-            Vote getUpdated = voteService.getWithRestaurant(VOTE_ID, USER1_ID);
+            Vote getUpdated = voteService.getWithRestaurant(VOTE1_ID, USER1_ID);
             VOTE_WITH_RESTAURANT_MATCHER.assertMatch(getUpdated, VoteTestData.getUpdated());
             RESTAURANT_MATCHER.assertMatch(getUpdated.getRestaurant(), restaurant3);
-            USER_MATCHER.assertMatch(getUpdated.getUser(), user1);
         } else {
             assertThrows(NotFoundException.class, () -> voteService.update(updated, USER1_ID, RESTAURANT3_ID));
         }
@@ -46,30 +44,30 @@ class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     void delete() {
-        voteService.delete(VOTE_ID, USER1_ID);
-        assertThrows(NotFoundException.class, () -> voteService.get(VOTE_ID, USER1_ID));
+        voteService.delete(VOTE1_ID, USER1_ID);
+        assertThrows(NotFoundException.class, () -> voteService.get(VOTE1_ID, USER1_ID));
     }
 
     @Test
     void get() {
-        Vote vote = voteService.get(VOTE_ID, USER1_ID);
+        Vote vote = voteService.get(VOTE1_ID, USER1_ID);
         VOTE_MATCHER.assertMatch(vote, vote1);
     }
 
     @Test
     void getWithRestaurant() {
-        Vote vote = voteService.getWithRestaurant(VOTE_ID, USER1_ID);
+        Vote vote = voteService.getWithRestaurant(VOTE1_ID, USER1_ID);
         VOTE_WITH_RESTAURANT_MATCHER.assertMatch(vote, vote1);
         RESTAURANT_MATCHER.assertMatch(vote.getRestaurant(), restaurant1);
     }
 
     @Test
     void getAllByUser() {
-        VOTE_MATCHER.assertMatch(voteService.getAllByUser(USER1_ID), List.of(vote1));
+        VOTE_MATCHER.assertMatch(voteService.getAllByUser(USER1_ID), votes1);
     }
 
     @Test
     void getAllByRestaurant() {
-        VOTE_MATCHER.assertMatch(voteService.getAllByRestaurant(RESTAURANT1_ID), List.of(vote1, vote3));
+        VOTE_MATCHER.assertMatch(voteService.getAllByRestaurant(RESTAURANT1_ID), votes1);
     }
 }

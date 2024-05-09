@@ -26,8 +26,8 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Vote v SET v.restaurant.id=:restaurantId WHERE v.registered=:registered AND v.user.id=:userId")
-    int updateByDate(@Param("restaurantId") int restaurantId, @Param("registered") LocalDate registered, @Param("userId") int userId);
+    @Query("UPDATE Vote v SET v.restaurant.id=:restaurantId WHERE v.id=:id AND v.user.id=:userId")
+    int update(@Param("restaurantId") int restaurantId, @Param("id") int id, @Param("userId") int userId);
 
     @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.registered DESC")
     List<Vote> getAllByUser(@Param("userId") int userId);

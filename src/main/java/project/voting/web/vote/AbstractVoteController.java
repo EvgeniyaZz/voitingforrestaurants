@@ -5,14 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import project.voting.model.Vote;
 import project.voting.service.VoteService;
-import project.voting.to.VoteTo;
-import project.voting.util.VoteUtil;
 import project.voting.web.SecurityUtil;
 
+import java.time.LocalDate;
 import java.util.List;
-
-import static project.voting.util.ValidationUtil.assureIdConsistent;
-import static project.voting.util.ValidationUtil.checkNew;
 
 public abstract class AbstractVoteController {
 
@@ -21,19 +17,17 @@ public abstract class AbstractVoteController {
     @Autowired
     VoteService voteService;
 
-    public Vote create(VoteTo voteTo, int restaurantId) {
+    public Vote create(int restaurantId) {
         int userId = SecurityUtil.authUserId();
-        log.info("create {} for user {}", voteTo, userId);
-        checkNew(voteTo);
-        return voteService.create(VoteUtil.createNewFromTo(voteTo), userId, restaurantId);
+        log.info("create new vote for user {}", userId);
+        return voteService.create(new Vote(null, LocalDate.now()), userId, restaurantId);
     }
 
-    public void update(VoteTo voteTo, int restaurantId, int id) {
+    public void update(int restaurantId, int id) {
         int userId = SecurityUtil.authUserId();
-        log.info("update vote {} in restaurant {} for user {}", voteTo, restaurantId, userId);
-        assureIdConsistent(voteTo, id);
+        log.info("update vote {} in restaurant {} for user {}", id, restaurantId, userId);
         Vote vote = voteService.get(id, userId);
-        voteService.update(VoteUtil.updateFromTo(vote, voteTo), userId, restaurantId);
+        voteService.update(vote, userId, restaurantId);
     }
 
     public void delete(int restaurantId, int id) {
@@ -46,12 +40,6 @@ public abstract class AbstractVoteController {
         int userId = SecurityUtil.authUserId();
         log.info("get vote {} for restaurant {}, user {}", id, restaurantId, userId);
         return voteService.get(id, userId);
-    }
-
-    public Vote getWithRestaurant(int id) {
-        int userId = SecurityUtil.authUserId();
-        log.info("get vote {} with restaurant for user {}", id, userId);
-        return voteService.getWithRestaurant(id, userId);
     }
 
     public List<Vote> getAllByUser() {

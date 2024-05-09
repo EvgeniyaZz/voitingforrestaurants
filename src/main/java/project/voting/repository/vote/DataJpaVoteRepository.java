@@ -34,8 +34,8 @@ public class DataJpaVoteRepository implements VoteRepository {
             return crudVoteRepository.save(vote);
         }
         if (LocalTime.now().isBefore(FINAL_TIME)) {
-            if(crudVoteRepository.updateByDate(restaurantId, vote.getRegistered(), userId) > 0) {
-                return get(vote.id(), userId);
+            if (crudVoteRepository.update(restaurantId, vote.id(), userId) > 0) {
+                return getWithRestaurant(vote.id(), userId);
             }
         }
         return null;

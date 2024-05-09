@@ -1,5 +1,6 @@
 package project.voting.util;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import project.voting.model.Role;
 import project.voting.model.User;
 import project.voting.to.UserTo;
@@ -18,6 +19,12 @@ public class UserUtil {
         user.setName(userTo.getName());
         user.setEmail(userTo.getEmail().toLowerCase());
         user.setPassword(userTo.getPassword());
+        return user;
+    }
+
+    public static User prepareToSave(User user, PasswordEncoder passwordEncoder) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEmail(user.getEmail().toLowerCase());
         return user;
     }
 }

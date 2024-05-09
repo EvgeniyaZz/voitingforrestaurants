@@ -3,7 +3,6 @@ package project.voting;
 import project.voting.model.Vote;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,13 +18,13 @@ public class VoteTestData {
             (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("restaurant.votes", "restaurant.menu", "user").isEqualTo(e),
             (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorIgnoringFields("restaurant.votes", "restaurant.menu", "user").isEqualTo(e));
 
-    public static final int VOTE_ID = START_SEQ + 17;
+    public static final int VOTE1_ID = START_SEQ + 17;
+    public static final int VOTE2_ID = VOTE1_ID + 1;
 
-    public static final Vote vote1 = new Vote(VOTE_ID, LocalDate.now());
-    public static final Vote vote2 = new Vote(VOTE_ID + 1, LocalDate.now());
-    public static final Vote vote3 = new Vote(VOTE_ID + 2, LocalDate.now());
+    public static final Vote vote1 = new Vote(VOTE1_ID, LocalDate.now());
+    public static final Vote vote2 = new Vote(VOTE2_ID, LocalDate.now());
 
-    public static final List<Vote> votes1 = List.of(vote1, vote3);
+    public static final List<Vote> votes1 = List.of(vote1);
 
     static {
         vote1.setRestaurant(restaurant1);
@@ -33,7 +32,7 @@ public class VoteTestData {
     }
 
     public static Vote getNew() {
-        return new Vote(null, LocalDate.now().plus(1, ChronoUnit.DAYS));
+        return new Vote(null, LocalDate.now());
     }
 
     public static Vote getUpdated() {

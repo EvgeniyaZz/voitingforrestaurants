@@ -26,12 +26,6 @@ public class VoteProfileRestController extends AbstractVoteController {
         return super.get(restaurantId, id);
     }
 
-    @GetMapping("/{id}/with-restaurant")
-    @Override
-    public Vote getWithRestaurant(@PathVariable int id) {
-        return super.getWithRestaurant(id);
-    }
-
     @GetMapping
     @Override
     public List<Vote> getAllByUser() {
