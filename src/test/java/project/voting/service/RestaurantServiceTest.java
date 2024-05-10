@@ -59,4 +59,9 @@ class RestaurantServiceTest extends AbstractServiceTest {
     void getByDate() {
         RESTAURANT_MATCHER.assertMatch(restaurantService.getByDate(LocalDate.now()), restaurantsByDate);
     }
+
+    @Test
+    void getWithMealsByDate() {
+        RESTAURANT_WITH_MENU_MATCHER.assertMatch(restaurantService.getWithMealsByDate(LocalDate.now()), restaurant2, restaurant1, restaurant3);
+    }
 }

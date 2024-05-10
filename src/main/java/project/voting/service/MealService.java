@@ -1,5 +1,6 @@
 package project.voting.service;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import project.voting.model.Meal;
@@ -18,16 +19,19 @@ public class MealService {
         this.mealRepository = mealRepository;
     }
 
+    @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
     public Meal create(Meal meal, int restaurantId) {
         Assert.notNull(meal, "meal must not be null");
         return mealRepository.save(meal, restaurantId);
     }
 
+    @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
     public void update(Meal meal, int restaurantId) {
         Assert.notNull(meal, "meal must not be null");
         checkNotFoundWithId(mealRepository.save(meal, restaurantId), meal.id());
     }
 
+    @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
     public void delete(int id, int restaurantId) {
         checkNotFoundWithId(mealRepository.delete(id, restaurantId), id);
     }
