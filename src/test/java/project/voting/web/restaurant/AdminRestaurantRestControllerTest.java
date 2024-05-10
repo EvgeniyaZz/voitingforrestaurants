@@ -148,4 +148,27 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_WITH_MENU_MATCHER.contentJson(restaurant2, restaurant1, restaurant3));
     }
+
+    @Test
+    void createInvalid() throws Exception {
+        Restaurant invalid = new Restaurant(null, "");
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .with(userHttpBasic(admin))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(invalid)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateInvalid() throws Exception {
+        Restaurant invalid = new Restaurant(restaurant1);
+        invalid.setName("");
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
+                .with(userHttpBasic(admin))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(invalid)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 }

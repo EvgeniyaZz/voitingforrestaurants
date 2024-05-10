@@ -51,26 +51,32 @@ class VoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void update() throws Exception {
+    void updateBeforeFinalTime() throws Exception {
         Vote updated = voteService.getWithRestaurant(VOTE1_ID, USER1_ID);
         updated.setRestaurant(restaurant3);
-        if (LocalTime.now().isBefore(FINAL_TIME)) {
-            perform(MockMvcRequestBuilders.put("/restaurants/" + RESTAURANT3_ID + "/votes/" + VOTE1_ID)
-                    .with(userHttpBasic(user1))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(writeValue(updated)))
-                    .andDo(print())
-                    .andExpect(status().isNoContent());
-            VOTE_WITH_RESTAURANT_MATCHER.assertMatch(voteService.getWithRestaurant(VOTE1_ID, USER1_ID), updated);
-        } else {
-            perform(MockMvcRequestBuilders.put(REST_URL + VOTE1_ID)
-                    .with(userHttpBasic(user1))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(writeValue(updated)))
-                    .andDo(print())
-                    .andExpect(status().isUnprocessableEntity());
-        }
+        FINAL_TIME = LocalTime.now().plusMinutes(10);
+        perform(MockMvcRequestBuilders.put("/restaurants/" + RESTAURANT3_ID + "/votes/" + VOTE1_ID)
+                .with(userHttpBasic(user1))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(updated)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+        VOTE_WITH_RESTAURANT_MATCHER.assertMatch(voteService.getWithRestaurant(VOTE1_ID, USER1_ID), updated);
     }
+
+    @Test
+    void updateAfterFinalTime() throws Exception {
+        Vote updated = voteService.getWithRestaurant(VOTE1_ID, USER1_ID);
+        updated.setRestaurant(restaurant3);
+        FINAL_TIME = LocalTime.now().minusMinutes(10);
+        perform(MockMvcRequestBuilders.put(REST_URL + VOTE1_ID)
+                .with(userHttpBasic(user1))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(updated)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
 
     @Test
     void delete() throws Exception {

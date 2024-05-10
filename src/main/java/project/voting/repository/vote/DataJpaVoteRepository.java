@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public class DataJpaVoteRepository implements VoteRepository {
 
-    public static final LocalTime FINAL_TIME = LocalTime.of(11, 0);
+    public static LocalTime FINAL_TIME = LocalTime.of(11, 0);
 
     private final CrudVoteRepository crudVoteRepository;
     private final CrudRestaurantRepository crudRestaurantRepository;

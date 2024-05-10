@@ -2,6 +2,7 @@ package project.voting.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import project.voting.model.User;
 import project.voting.util.exception.NotFoundException;
 
@@ -46,6 +47,11 @@ class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    void getNotFound() {
+        assertThrows(NotFoundException.class, () -> userService.get(NOT_FOUND));
+    }
+
+    @Test
     void getByEmail() {
         User user = userService.getByEmail("admin@gmail.com");
         USER_MATCHER.assertMatch(user, admin);
@@ -63,5 +69,19 @@ class UserServiceTest extends AbstractServiceTest {
         assertFalse(userService.get(USER1_ID).isEnabled());
         userService.enable(USER1_ID, true);
         assertTrue(userService.get(USER1_ID).isEnabled());
+    }
+
+    @Test
+    void createDuplicate() {
+        User created = userService.create(getNew());
+        created.setEmail("admin@gmail.com");
+        assertThrows(DataIntegrityViolationException.class, () -> userService.create(created));
+    }
+
+    @Test
+    void updateDuplicate() {
+        User updated = new User(user1);
+        updated.setEmail("admin@gmail.com");
+        assertThrows(DataIntegrityViolationException.class, () -> userService.update(updated));
     }
 }

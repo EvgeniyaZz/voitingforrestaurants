@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import project.voting.RestaurantTestData;
 import project.voting.model.Meal;
 import project.voting.model.Restaurant;
 import project.voting.service.MealService;
@@ -125,5 +124,27 @@ class AdminMealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_MATCHER.contentJson(meals1));
+    }
+
+    @Test
+    void createInvalid() throws Exception {
+        MealTo mealTo = new MealTo(null, "", 0);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .with(userHttpBasic(admin))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(mealTo)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateInvalid() throws Exception {
+        MealTo updatedTo = new MealTo(MEAL1_ID, " ", 50);
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+                .with(userHttpBasic(admin))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(updatedTo)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
