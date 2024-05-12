@@ -1,23 +1,68 @@
 package project.voting.repository.vote;
 
+import org.springframework.stereotype.Repository;
 import project.voting.model.Vote;
+import project.voting.repository.restaurant.CrudRestaurantRepository;
+import project.voting.repository.user.CrudUserRepository;
+
+import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
-public interface VoteRepository {
+@Repository
+public class VoteRepository {
 
-    Vote save(Vote vote, int userId, int restaurantId);
+    public static final LocalTime FINAL_TIME = LocalTime.of(11, 0);
 
-    boolean delete(int id, int userId);
+    private final CrudVoteRepository crudVoteRepository;
+    private final CrudRestaurantRepository crudRestaurantRepository;
+    private final CrudUserRepository crudUserRepository;
 
-    Vote get(int id, int userId);
+    public VoteRepository(CrudVoteRepository crudVoteRepository, CrudRestaurantRepository crudRestaurantRepository, CrudUserRepository crudUserRepository) {
+        this.crudVoteRepository = crudVoteRepository;
+        this.crudRestaurantRepository = crudRestaurantRepository;
+        this.crudUserRepository = crudUserRepository;
+    }
 
-    Vote getByDate(int userId, LocalDate registered);
+    @Transactional
+    public Vote save(Vote vote, int userId, int restaurantId) {
+        if (getByDate(userId, vote.getRegistered()) == null) {
+            vote.setRestaurant(crudRestaurantRepository.getReferenceById(restaurantId));
+            vote.setUser(crudUserRepository.getReferenceById(userId));
+            return crudVoteRepository.save(vote);
+        }
+        if (LocalTime.now().isBefore(FINAL_TIME)) {
+            if (crudVoteRepository.update(restaurantId, vote.id(), userId) > 0) {
+                return getWithRestaurant(vote.id(), userId);
+            }
+        }
+        return null;
+    }
 
-    List<Vote> getAllByUser(int userId);
+    public boolean delete(int id, int userId) {
+        return crudVoteRepository.delete(id, userId) != 0;
+    }
 
-    List<Vote> getAllByRestaurant(int restaurantId);
+    public Vote get(int id, int userId) {
+        return crudVoteRepository.findById(id)
+                .filter(vote -> vote.getUser().getId() == userId).orElse(null);
+    }
 
-    Vote getWithRestaurant(int id, int userId);
+    public Vote getByDate(int userId, LocalDate registered) {
+        return crudVoteRepository.getByDate(userId, registered);
+    }
+
+    public Vote getWithRestaurant(int id, int userId) {
+        return crudVoteRepository.getWithRestaurant(id, userId).orElse(null);
+    }
+
+    public List<Vote> getAllByUser(int userId) {
+        return crudVoteRepository.getAllByUser(userId);
+    }
+
+    public List<Vote> getAllByRestaurant(int restaurantId) {
+        return crudVoteRepository.getAllByRestaurant(restaurantId);
+    }
 }

@@ -9,6 +9,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import project.voting.RestaurantTestData;
 import project.voting.model.Restaurant;
 import project.voting.service.RestaurantService;
+import project.voting.to.RestaurantTo;
+import project.voting.util.RestaurantUtil;
 import project.voting.util.exception.NotFoundException;
 import project.voting.web.AbstractControllerTest;
 
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.voting.RestaurantTestData.*;
 import static project.voting.UserTestData.*;
+import static project.voting.util.RestaurantUtil.createNewFromTo;
 import static project.voting.web.json.JsonUtil.writeValue;
 import static project.voting.web.restaurant.AdminRestaurantRestController.REST_URL;
 
@@ -33,20 +36,21 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        Restaurant updated = RestaurantTestData.getUpdated();
+        RestaurantTo updated = new RestaurantTo(null, "Updated restaurant");
         perform(MockMvcRequestBuilders.put(REST_URL_SLASH + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        RESTAURANT_MATCHER.assertMatch(restaurantService.get(RESTAURANT1_ID), updated);
+        RESTAURANT_MATCHER.assertMatch(restaurantService.get(RESTAURANT1_ID), RestaurantUtil.updateFromTo(new Restaurant(restaurant1),updated));
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
-        Restaurant newRestaurant = RestaurantTestData.getNew();
+        RestaurantTo restaurantTo = new RestaurantTo(null, "New restaurant");
+        Restaurant newRestaurant = createNewFromTo(restaurantTo);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(newRestaurant)))

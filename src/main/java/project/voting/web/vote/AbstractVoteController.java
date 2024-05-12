@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import project.voting.model.Vote;
 import project.voting.service.VoteService;
 import project.voting.config.SecurityUtil;
+import project.voting.to.VoteTo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,14 +33,22 @@ public abstract class AbstractVoteController {
 
     public void delete(int restaurantId, int id) {
         int userId = SecurityUtil.authUserId();
-        log.info("delete vote {} for restaurant {}, user {}", id, restaurantId, userId);
+        log.info("delete vote {} for user {}", id, userId);
         voteService.delete(id, userId);
     }
 
-    public Vote get(int restaurantId, int id) {
+    public VoteTo get(int id) {
+        int userId = SecurityUtil.authUserId();
+        log.info("get vote {} for user {}", id, userId);
+        Vote vote = voteService.getWithRestaurant(id, userId);
+        return new VoteTo(vote.id(), vote.getRestaurant().id(), vote.getRegistered());
+    }
+
+    public VoteTo get(int restaurantId, int id) {
         int userId = SecurityUtil.authUserId();
         log.info("get vote {} for restaurant {}, user {}", id, restaurantId, userId);
-        return voteService.get(id, userId);
+        Vote vote = voteService.get(id, userId);
+        return new VoteTo(vote.id(), restaurantId, vote.getRegistered());
     }
 
     public List<Vote> getAllByUser() {

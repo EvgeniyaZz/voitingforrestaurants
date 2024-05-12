@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import project.voting.model.Vote;
+import project.voting.to.VoteTo;
 
 import java.net.URI;
 import java.util.List;
@@ -44,7 +45,7 @@ public class VoteRestController extends AbstractVoteController {
 
     @GetMapping("/{id}")
     @Override
-    public Vote get(@PathVariable int restaurantId, @PathVariable int id) {
+    public VoteTo get(@PathVariable int restaurantId, @PathVariable int id) {
         return super.get(restaurantId, id);
     }
 

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import project.voting.model.Vote;
+import project.voting.to.VoteTo;
 
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class VoteProfileRestController extends AbstractVoteController {
 
     @GetMapping("/{id}")
     @Override
-    public Vote get(@RequestParam int restaurantId, @PathVariable int id) {
-        return super.get(restaurantId, id);
+    public VoteTo get(@PathVariable int id) {
+        return super.get(id);
     }
 
     @GetMapping

@@ -5,10 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import project.voting.model.Restaurant;
 import project.voting.service.RestaurantService;
+import project.voting.to.RestaurantTo;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static project.voting.util.RestaurantUtil.createNewFromTo;
+import static project.voting.util.RestaurantUtil.updateFromTo;
 import static project.voting.util.ValidationUtil.assureIdConsistent;
 import static project.voting.util.ValidationUtil.checkNew;
 
@@ -19,16 +22,16 @@ public class AbstractRestaurantController {
     @Autowired
     private RestaurantService restaurantService;
 
-    public Restaurant create(Restaurant restaurant) {
-        log.info("create {}", restaurant);
-        checkNew(restaurant);
-        return restaurantService.create(restaurant);
+    public Restaurant create(RestaurantTo restaurantTo) {
+        log.info("create {}", restaurantTo);
+        checkNew(restaurantTo);
+        return restaurantService.create(createNewFromTo(restaurantTo));
     }
 
-    public void update(Restaurant restaurant, int id) {
-        log.info("update {} with id={}", restaurant, id);
-        assureIdConsistent(restaurant, id);
-        restaurantService.update(restaurant);
+    public void update(RestaurantTo restaurantTo, int id) {
+        log.info("update {} with id={}", restaurantTo, id);
+        assureIdConsistent(restaurantTo, id);
+        restaurantService.update(updateFromTo(restaurantService.get(id), restaurantTo));
     }
 
     public void delete(int id) {

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static project.voting.RestaurantTestData.*;
 import static project.voting.UserTestData.*;
 import static project.voting.VoteTestData.*;
-import static project.voting.repository.vote.DataJpaVoteRepository.FINAL_TIME;
+import static project.voting.repository.vote.VoteRepository.FINAL_TIME;
 
 class VoteServiceTest extends AbstractServiceTest {
 

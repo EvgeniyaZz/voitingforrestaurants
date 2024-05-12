@@ -9,6 +9,7 @@ import project.voting.model.Vote;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
@@ -22,7 +23,7 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
     Vote getByDate(@Param("userId") int userId, @Param("registered") LocalDate registered);
 
     @Query("SELECT v FROM Vote v JOIN FETCH v.restaurant WHERE v.id= ?1 AND v.user.id= ?2")
-    Vote getWithRestaurant(int id, int userId);
+    Optional<Vote> getWithRestaurant(int id, int userId);
 
     @Transactional
     @Modifying

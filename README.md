@@ -20,3 +20,17 @@ couple curl commands to test it (better - link to Swagger).
 
 P.S.: Make sure everything works with the latest version that is on github :)
 P.P.S.: Assume that your API will be used by a frontend developer to build frontend on top of that.
+
+-------------------------------------------------------------
+
+- Stack: JDK 21, Spring Boot 3.2.5, Lombok, H2, Caffeine Cache, Swagger/OpenAPI 3.0
+- Run: `mvn spring-boot:run` in root directory.
+-----------------------------------------------------
+[REST API documentation](http://localhost:8080/swagger-ui/index.html)  
+Креденшелы:
+
+```
+Admin: admin@gmail.com / admin
+User:  user@yandex.ru / password
+User2: user2@gmail.com / user2
+```

@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static project.voting.RestaurantTestData.*;
 import static project.voting.UserTestData.*;
 import static project.voting.VoteTestData.*;
-import static project.voting.repository.vote.DataJpaVoteRepository.FINAL_TIME;
+import static project.voting.repository.vote.VoteRepository.FINAL_TIME;
 import static project.voting.web.json.JsonUtil.writeValue;
 
 class VoteRestControllerTest extends AbstractControllerTest {
