@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import project.voting.model.Vote;
 import project.voting.service.VoteService;
-import project.voting.web.SecurityUtil;
+import project.voting.config.SecurityUtil;
 
 import java.time.LocalDate;
 import java.util.List;

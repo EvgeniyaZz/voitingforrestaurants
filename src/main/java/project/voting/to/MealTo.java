@@ -1,11 +1,16 @@
 package project.voting.to;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serial;
 import java.io.Serializable;
 
+@Setter
+@Getter
 public class MealTo extends BaseTo implements Serializable {
 
     @Serial
@@ -24,22 +29,6 @@ public class MealTo extends BaseTo implements Serializable {
     public MealTo(Integer id, String name, int price) {
         super(id);
         this.name = name;
-        this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
         this.price = price;
     }
 

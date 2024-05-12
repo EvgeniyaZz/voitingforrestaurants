@@ -4,7 +4,7 @@ import org.springframework.stereotype.Repository;
 import project.voting.model.Meal;
 import project.voting.repository.restaurant.CrudRestaurantRepository;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.List;
 
 @Repository

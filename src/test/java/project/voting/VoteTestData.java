@@ -8,7 +8,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static project.voting.RestaurantTestData.*;
 import static project.voting.UserTestData.user1;
-import static project.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class VoteTestData {
 
@@ -18,11 +17,10 @@ public class VoteTestData {
             (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("restaurant.votes", "restaurant.menu", "user").isEqualTo(e),
             (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorIgnoringFields("restaurant.votes", "restaurant.menu", "user").isEqualTo(e));
 
-    public static final int VOTE1_ID = START_SEQ + 17;
-    public static final int VOTE2_ID = VOTE1_ID + 1;
+    public static final int VOTE1_ID = 1;
+    public static final int VOTE2_ID = 2;
 
     public static final Vote vote1 = new Vote(VOTE1_ID, LocalDate.now());
-    public static final Vote vote2 = new Vote(VOTE2_ID, LocalDate.now());
 
     public static final List<Vote> votes1 = List.of(vote1);
 

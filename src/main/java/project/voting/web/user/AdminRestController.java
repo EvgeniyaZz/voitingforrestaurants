@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import project.voting.model.User;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestController extends AbstractUserController{
 
-    public static final String REST_URL = "/admin/users";
+    public static final String REST_URL = "/api/admin/users";
 
     @Override
     @GetMapping

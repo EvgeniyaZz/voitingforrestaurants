@@ -1,9 +1,11 @@
 package project.voting.util;
 
+import lombok.experimental.UtilityClass;
 import project.voting.HasId;
 import project.voting.util.exception.IllegalRequestDataException;
 import project.voting.util.exception.NotFoundException;
 
+@UtilityClass
 public class ValidationUtil {
 
     public static <T> T checkNotFoundWithId(T object, int id) {

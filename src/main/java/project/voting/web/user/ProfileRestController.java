@@ -8,15 +8,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import project.voting.model.User;
 import project.voting.to.UserTo;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 
-import static project.voting.web.SecurityUtil.authUserId;
+import static project.voting.config.SecurityUtil.authUserId;
 
 @RestController
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileRestController extends AbstractUserController {
-    static final String REST_URL = "/profile";
+    static final String REST_URL = "/api/profile";
 
     @GetMapping
     public User get() {

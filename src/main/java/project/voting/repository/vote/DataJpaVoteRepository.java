@@ -5,7 +5,7 @@ import project.voting.model.Vote;
 import project.voting.repository.restaurant.CrudRestaurantRepository;
 import project.voting.repository.user.CrudUserRepository;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public class DataJpaVoteRepository implements VoteRepository {
 
-    public static LocalTime FINAL_TIME = LocalTime.of(11, 0);
+    public static final LocalTime FINAL_TIME = LocalTime.of(11, 0);
 
     private final CrudVoteRepository crudVoteRepository;
     private final CrudRestaurantRepository crudRestaurantRepository;

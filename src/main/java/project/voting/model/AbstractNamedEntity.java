@@ -1,9 +1,16 @@
 package project.voting.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @MappedSuperclass
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
 
     @NotBlank
@@ -11,19 +18,8 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     @Column(name = "name", nullable = false)
     protected String name;
 
-    protected AbstractNamedEntity() {
-    }
-
     protected AbstractNamedEntity(Integer id, String name) {
         super(id);
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
     }
 

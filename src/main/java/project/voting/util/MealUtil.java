@@ -1,8 +1,10 @@
 package project.voting.util;
 
+import lombok.experimental.UtilityClass;
 import project.voting.model.Meal;
 import project.voting.to.MealTo;
 
+@UtilityClass
 public class MealUtil {
 
     public static Meal createNewFromTo(MealTo mealTo) {

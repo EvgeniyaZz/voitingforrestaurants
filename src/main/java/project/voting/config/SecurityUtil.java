@@ -1,8 +1,7 @@
-package project.voting.web;
+package project.voting.config;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import project.voting.AuthorizedUser;
 
 import static java.util.Objects.requireNonNull;
 
@@ -25,6 +24,6 @@ public class SecurityUtil {
     }
 
     public static int authUserId() {
-        return get().getUserTo().id();
+        return get().id();
     }
 }

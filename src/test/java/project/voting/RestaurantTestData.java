@@ -7,7 +7,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static project.voting.MealTestData.*;
-import static project.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class RestaurantTestData {
 
@@ -17,8 +16,8 @@ public class RestaurantTestData {
             (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("added", "menu.restaurant", "votes").isEqualTo(e),
             (a, e) -> assertThat(a).usingRecursiveFieldByFieldElementComparatorIgnoringFields("added", "menu.restaurant", "votes").isEqualTo(e));
 
-    public static final int RESTAURANT1_ID = START_SEQ + 3;
-    public static final int RESTAURANT3_ID = RESTAURANT1_ID + 2;
+    public static final int RESTAURANT1_ID = 1;
+    public static final int RESTAURANT3_ID = 3;
     public static final int NOT_FOUND = 10;
 
     public static final Restaurant restaurant1 = new Restaurant(RESTAURANT1_ID, "Restaurant Schengen");

@@ -1,10 +1,13 @@
 package project.voting.util;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.experimental.UtilityClass;
 import project.voting.model.Role;
 import project.voting.model.User;
 import project.voting.to.UserTo;
 
+import static project.voting.config.SecurityConfig.PASSWORD_ENCODER;
+
+@UtilityClass
 public class UserUtil {
 
     public static User createNewFromTo(UserTo userTo) {
@@ -22,8 +25,8 @@ public class UserUtil {
         return user;
     }
 
-    public static User prepareToSave(User user, PasswordEncoder passwordEncoder) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public static User prepareToSave(User user) {
+        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
         user.setEmail(user.getEmail().toLowerCase());
         return user;
     }

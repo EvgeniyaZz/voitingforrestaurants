@@ -1,19 +1,23 @@
 package project.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import project.voting.HasId;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "vote", uniqueConstraints = @UniqueConstraint(columnNames = {"registered", "user_id"}, name = "user_unique_voice_date_idx"))
 public class Vote extends AbstractBaseEntity implements HasId {
 
-    @Column(name = "registered", nullable = false)
+    @Column(name = "registered", nullable = false, columnDefinition = "date default now()")
     @NotNull
     private LocalDate registered;
 
@@ -48,30 +52,6 @@ public class Vote extends AbstractBaseEntity implements HasId {
         this.registered=registered;
         this.user=user;
         this.restaurant=restaurant;
-    }
-
-    public LocalDate getRegistered() {
-        return registered;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRegistered(LocalDate registered) {
-        this.registered = registered;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
     }
 
     @Override

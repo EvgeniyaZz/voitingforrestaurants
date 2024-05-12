@@ -1,33 +1,22 @@
 package project.voting.model;
 
+import lombok.*;
 import project.voting.HasId;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Objects;
 
+@Getter
+@Setter
 @MappedSuperclass
+@Access(AccessType.FIELD)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractBaseEntity implements HasId {
-    public static final int START_SEQ = 100000;
 
-    @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1, initialValue = START_SEQ)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     protected Integer id;
-
-    protected AbstractBaseEntity() {
-    }
-
-    protected AbstractBaseEntity(Integer id) {
-        this.id = id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
 
     @Override
     public boolean equals(Object o) {

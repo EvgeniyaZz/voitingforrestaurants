@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping(value = VoteProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteProfileRestController extends AbstractVoteController {
 
-    public static final String REST_URL = "/profile/votes";
+    public static final String REST_URL = "/api/profile/votes";
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

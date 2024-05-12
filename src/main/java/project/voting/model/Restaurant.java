@@ -1,16 +1,20 @@
 package project.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import project.voting.HasId;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "restaurant", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "added"}, name = "restaurant_date_idx"))
 public class Restaurant extends AbstractNamedEntity implements HasId {
 
@@ -19,7 +23,7 @@ public class Restaurant extends AbstractNamedEntity implements HasId {
     @JsonManagedReference(value = "restaurant-meal")
     private List<Meal> menu;
 
-    @Column(name = "added", nullable = false)
+    @Column(name = "added", nullable = false, columnDefinition = "date default now()")
     @NotNull
     private LocalDate added;
 
@@ -42,30 +46,6 @@ public class Restaurant extends AbstractNamedEntity implements HasId {
     public Restaurant(Integer id, String name, LocalDate added) {
         super(id, name);
         this.added = added;
-    }
-
-    public List<Meal> getMenu() {
-        return menu;
-    }
-
-    public LocalDate getAdded() {
-        return added;
-    }
-
-    public List<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setMenu(List<Meal> menu) {
-        this.menu = menu;
-    }
-
-    public void setAdded(LocalDate added) {
-        this.added = added;
-    }
-
-    public void setVotes(List<Vote> votes) {
-        this.votes = votes;
     }
 
     @Override

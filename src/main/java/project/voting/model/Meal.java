@@ -1,13 +1,17 @@
 package project.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import project.voting.HasId;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "meal", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "restaurant_id"}, name = "meal_restaurant_unique_date_idx"))
 public class Meal extends AbstractNamedEntity implements HasId {
@@ -16,6 +20,7 @@ public class Meal extends AbstractNamedEntity implements HasId {
     @NotNull
     private int price;
 
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -33,18 +38,6 @@ public class Meal extends AbstractNamedEntity implements HasId {
     public Meal(Integer id, String name, int price) {
         super(id, name);
         this.price = price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-
-    public Restaurant getRestaurant() {
-        return restaurant;
     }
 
     @Override

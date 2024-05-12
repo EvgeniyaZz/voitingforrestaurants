@@ -1,15 +1,23 @@
 package project.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.NonNull;
 import project.voting.HasIdAndEmail;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import project.voting.util.NoHtml;
+
 import java.util.*;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "users")
 public class User extends AbstractNamedEntity implements HasIdAndEmail {
@@ -18,6 +26,7 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
     @Email
     @NotBlank
     @Size(max = 128)
+    @NoHtml
     private String email;
 
     @Column(name = "password", nullable = false)
@@ -30,6 +39,7 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registered = new Date();
 
     @Enumerated(EnumType.STRING)
@@ -43,6 +53,7 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference(value = "user-vote")
+    @Schema(hidden = true)
     private List<Vote> votes;
 
     public User() {
@@ -65,49 +76,8 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
         setRoles(roles);
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public void setRoles(Collection<Role> roles) {
         this.roles = roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
-    }
-
-    public void setVotes(List<Vote> votes) {
-        this.votes = votes;
-    }
-
-    @Override
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public Date getRegistered() {
-        return registered;
-    }
-
-    public List<Vote> getVotes() {
-        return votes;
     }
 
     @Override

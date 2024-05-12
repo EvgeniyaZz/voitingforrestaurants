@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping(value = VoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteRestController extends AbstractVoteController {
 
-    public static final String REST_URL = "/restaurants/{restaurantId}/votes";
+    public static final String REST_URL = "/api/restaurants/{restaurantId}/votes";
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createWithLocation(@PathVariable int restaurantId) {

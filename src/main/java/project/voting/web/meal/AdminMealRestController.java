@@ -1,8 +1,7 @@
 package project.voting.web.meal;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import project.voting.service.MealService;
 import project.voting.to.MealTo;
 import project.voting.util.MealUtil;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -22,17 +21,16 @@ import static project.voting.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = AdminMealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@Slf4j
+@AllArgsConstructor
 public class AdminMealRestController {
 
-    public static final String REST_URL = "/admin/restaurants/{restaurantId}/meals";
+    public static final String REST_URL = "/api/admin/restaurants/{restaurantId}/meals";
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    @Autowired
     MealService mealService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> create(@Valid @RequestBody MealTo mealTo, @PathVariable int restaurantId) {
+    public ResponseEntity<Meal> createWithLocation(@Valid @RequestBody MealTo mealTo, @PathVariable int restaurantId) {
         log.info("create {}", mealTo);
         checkNew(mealTo);
         Meal created = mealService.create(MealUtil.createNewFromTo(mealTo), restaurantId);

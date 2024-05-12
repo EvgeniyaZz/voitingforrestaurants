@@ -1,5 +1,6 @@
 package project.voting.web.restaurant;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import project.voting.model.Restaurant;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping(value = AdminRestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestaurantRestController extends AbstractRestaurantController {
 
-    public static final String REST_URL = "/admin/restaurants";
+    public static final String REST_URL = "/api/admin/restaurants";
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
@@ -63,12 +64,12 @@ public class AdminRestaurantRestController extends AbstractRestaurantController 
 
     @Override
     @GetMapping("/date")
-    public List<Restaurant> getByDate(@RequestParam @Nullable LocalDate added) {
+    public List<Restaurant> getByDate(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate added) {
         return super.getByDate(added);
     }
 
     @GetMapping("/with-meals/date")
-    public List<Restaurant> getWithMealsByDate(@RequestParam @Nullable LocalDate added) {
+    public List<Restaurant> getWithMealsByDate(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate added) {
         return super.getWithMealsByDate(added);
     }
 }

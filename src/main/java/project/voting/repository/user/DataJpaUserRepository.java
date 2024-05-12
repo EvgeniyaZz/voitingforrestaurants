@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DataJpaUserRepository implements UserRepository {
@@ -33,9 +34,8 @@ public class DataJpaUserRepository implements UserRepository {
         return crudUserRepository.findById(id).orElse(null);
     }
 
-    @Override
-    public User getByEmail(String email) {
-        return crudUserRepository.getByEmail(email);
+    public Optional<User> findByEmailIgnoreCase(String email) {
+        return crudUserRepository.findByEmailIgnoreCase(email);
     }
 
     @Override
