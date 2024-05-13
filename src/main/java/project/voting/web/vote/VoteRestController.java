@@ -1,5 +1,6 @@
 package project.voting.web.vote;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class VoteRestController extends AbstractVoteController {
     public static final String REST_URL = "/api/restaurants/{restaurantId}/votes";
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> createWithLocation(@PathVariable int restaurantId) {
+    public ResponseEntity<Vote> createWithLocation(@PathVariable int restaurantId, @Valid @RequestBody VoteTo voteTo) {
         Vote created = super.create(restaurantId);
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -31,8 +32,7 @@ public class VoteRestController extends AbstractVoteController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Override
-    public void update(@PathVariable int restaurantId, @PathVariable int id) {
+    public void update(@PathVariable int restaurantId, @PathVariable int id, @Valid @RequestBody VoteTo voteTo) {
         super.update(restaurantId, id);
     }
 

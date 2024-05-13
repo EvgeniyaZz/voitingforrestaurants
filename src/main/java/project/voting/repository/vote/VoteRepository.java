@@ -28,14 +28,15 @@ public class VoteRepository {
 
     @Transactional
     public Vote save(Vote vote, int userId, int restaurantId) {
-        if (getByDate(userId, vote.getRegistered()) == null) {
+        Vote getByDate = getByDate(userId, vote.getRegistered());
+        if (getByDate == null) {
             vote.setRestaurant(crudRestaurantRepository.getReferenceById(restaurantId));
             vote.setUser(crudUserRepository.getReferenceById(userId));
             return crudVoteRepository.save(vote);
         }
         if (LocalTime.now().isBefore(FINAL_TIME)) {
-            if (crudVoteRepository.update(restaurantId, vote.id(), userId) > 0) {
-                return getWithRestaurant(vote.id(), userId);
+            if (crudVoteRepository.update(restaurantId, getByDate.id(), userId) > 0) {
+                return getWithRestaurant(getByDate.id(), userId);
             }
         }
         return null;
