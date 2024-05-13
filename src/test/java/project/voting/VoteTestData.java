@@ -1,6 +1,7 @@
 package project.voting;
 
 import project.voting.model.Vote;
+import project.voting.to.VoteTo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,13 +30,11 @@ public class VoteTestData {
         vote1.setUser(user1);
     }
 
-    public static Vote getNew() {
-        return new Vote(null, LocalDate.now());
+    public static VoteTo getNew() {
+        return new VoteTo(null, RESTAURANT1_ID, LocalDate.now());
     }
 
-    public static Vote getUpdated() {
-        Vote updated = new Vote(vote1);
-        updated.setRestaurant(restaurant3);
-        return updated;
+    public static VoteTo getUpdated() {
+        return new VoteTo(VOTE1_ID, RESTAURANT3_ID, LocalDate.now());
     }
 }

@@ -7,30 +7,29 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import project.voting.model.Meal;
-import project.voting.service.MealService;
+import project.voting.repository.MealRepository;
 import project.voting.to.MealTo;
 import project.voting.util.MealUtil;
-import project.voting.util.exception.NotFoundException;
 import project.voting.web.AbstractControllerTest;
-import project.voting.web.restaurant.AdminRestaurantRestController;
+import project.voting.web.restaurant.AdminRestaurantController;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.voting.MealTestData.*;
 import static project.voting.RestaurantTestData.RESTAURANT1_ID;
-import static project.voting.UserTestData.*;
+import static project.voting.UserTestData.ADMIN_MAIL;
+import static project.voting.UserTestData.USER_MAIL;
 import static project.voting.web.json.JsonUtil.writeValue;
 
-class AdminMealRestControllerTest extends AbstractControllerTest {
+class AdminMealControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL = AdminRestaurantRestController.REST_URL + "/" + RESTAURANT1_ID + "/meals";
+    private static final String REST_URL = AdminRestaurantController.REST_URL + "/" + RESTAURANT1_ID + "/meals";
     private static final String REST_URL_SLASH = REST_URL + "/";
 
-
     @Autowired
-    private MealService mealService;
+    MealRepository repository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -49,7 +48,7 @@ class AdminMealRestControllerTest extends AbstractControllerTest {
         newMeal.setId(newId);
 
         MEAL_MATCHER.assertMatch(created, newMeal);
-        MEAL_MATCHER.assertMatch(mealService.get(newId, RESTAURANT1_ID), newMeal);
+        MEAL_MATCHER.assertMatch(repository.getBelonged(newId, RESTAURANT1_ID), newMeal);
     }
 
     @Test
@@ -62,7 +61,7 @@ class AdminMealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, RESTAURANT1_ID), MealUtil.updateFromTo(new Meal(meal1), updatedTo));
+        MEAL_MATCHER.assertMatch(repository.getBelonged(MEAL1_ID, RESTAURANT1_ID), MealUtil.updateFromTo(new Meal(meal1), updatedTo));
     }
 
     @Test
@@ -71,15 +70,15 @@ class AdminMealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + MEAL1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> mealService.get(MEAL1_ID, RESTAURANT1_ID));
+        assertFalse(repository.get(MEAL1_ID, RESTAURANT1_ID).isPresent());
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void deleteNotFound() throws Exception {
+    void deleteDataConflict() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + MEAL4_ID))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -97,7 +96,7 @@ class AdminMealRestControllerTest extends AbstractControllerTest {
     void getNotFound() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + MEAL4_ID))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isNotFound());
     }
 
     @Test

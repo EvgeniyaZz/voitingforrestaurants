@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import project.voting.HasIdAndEmail;
 import project.voting.config.SecurityUtil;
-import project.voting.repository.user.UserRepository;
+import project.voting.repository.UserRepository;
 
 @Component
 @AllArgsConstructor

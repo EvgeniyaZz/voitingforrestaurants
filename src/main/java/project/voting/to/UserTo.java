@@ -10,11 +10,7 @@ import project.voting.util.NoHtml;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
-public class UserTo extends BaseTo implements HasIdAndEmail {
-
-    @NotBlank
-    @Size(min = 2, max = 100)
-    String name;
+public class UserTo extends NamedTo implements HasIdAndEmail {
 
     @Email
     @NotBlank
@@ -27,8 +23,7 @@ public class UserTo extends BaseTo implements HasIdAndEmail {
     String password;
 
     public UserTo(Integer id, String name, String email, String password) {
-        super(id);
-        this.name = name;
+        super(id, name);
         this.email = email;
         this.password = password;
     }

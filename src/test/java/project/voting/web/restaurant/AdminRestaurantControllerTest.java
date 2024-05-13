@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import project.voting.RestaurantTestData;
 import project.voting.model.Restaurant;
-import project.voting.service.RestaurantService;
+import project.voting.repository.RestaurantRepository;
 import project.voting.to.RestaurantTo;
 import project.voting.util.RestaurantUtil;
 import project.voting.util.exception.NotFoundException;
@@ -24,14 +24,14 @@ import static project.voting.RestaurantTestData.*;
 import static project.voting.UserTestData.*;
 import static project.voting.util.RestaurantUtil.createNewFromTo;
 import static project.voting.web.json.JsonUtil.writeValue;
-import static project.voting.web.restaurant.AdminRestaurantRestController.REST_URL;
+import static project.voting.web.restaurant.AdminRestaurantController.REST_URL;
 
-class AdminRestaurantRestControllerTest extends AbstractControllerTest {
+class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = REST_URL + "/";
 
     @Autowired
-    private RestaurantService restaurantService;
+    private RestaurantRepository repository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -43,7 +43,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        RESTAURANT_MATCHER.assertMatch(restaurantService.get(RESTAURANT1_ID), RestaurantUtil.updateFromTo(new Restaurant(restaurant1),updated));
+        RESTAURANT_MATCHER.assertMatch(repository.getExisted(RESTAURANT1_ID), RestaurantUtil.updateFromTo(new Restaurant(restaurant1), updated));
     }
 
     @Test
@@ -61,7 +61,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newRestaurant.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(restaurantService.get(newId), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(repository.getExisted(newId), newRestaurant);
     }
 
     @Test
@@ -70,7 +70,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> restaurantService.get(RESTAURANT1_ID));
+        assertThrows(NotFoundException.class, () -> repository.getExisted(RESTAURANT1_ID));
     }
 
     @Test
@@ -145,7 +145,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getWithMealsByDate() throws Exception{
+    void getWithMealsByDate() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "with-meals/date")
                 .param("added", LocalDate.now().toString()))
                 .andExpect(status().isOk())

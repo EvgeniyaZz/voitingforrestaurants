@@ -7,7 +7,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import project.voting.model.User;
-import project.voting.service.UserService;
+import project.voting.repository.UserRepository;
 import project.voting.to.UserTo;
 import project.voting.util.UserUtil;
 import project.voting.web.AbstractControllerTest;
@@ -18,12 +18,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.voting.UserTestData.*;
 
-class ProfileRestControllerTest extends AbstractControllerTest {
+class ProfileUserControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL = ProfileRestController.REST_URL;
+    private static final String REST_URL = ProfileUserController.REST_URL;
 
     @Autowired
-    private UserService userService;
+    private UserRepository repository;
 
     @Test
     @WithUserDetails(value = USER_MAIL)
@@ -45,7 +45,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(userService.getAll(), admin, user2);
+        USER_MATCHER.assertMatch(repository.findAll(), admin, user2);
     }
 
     @Test
@@ -62,7 +62,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(userService.get(newId), newUser);
+        USER_MATCHER.assertMatch(repository.getExisted(newId), newUser);
     }
 
     @Test
@@ -74,7 +74,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(userService.get(USER1_ID), UserUtil.updateFromTo(new User(user1), updatedTo));
+        USER_MATCHER.assertMatch(repository.getExisted(USER1_ID), UserUtil.updateFromTo(new User(user1), updatedTo));
     }
 
     @Test

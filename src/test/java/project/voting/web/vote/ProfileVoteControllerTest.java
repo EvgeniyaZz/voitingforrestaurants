@@ -5,10 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import project.voting.VoteTestData;
+import project.voting.model.Vote;
+import project.voting.repository.VoteRepository;
 import project.voting.service.VoteService;
+import project.voting.to.VoteTo;
 import project.voting.util.exception.NotFoundException;
 import project.voting.web.AbstractControllerTest;
+import project.voting.web.json.JsonUtil;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,16 +22,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.voting.RestaurantTestData.RESTAURANT1_ID;
-import static project.voting.UserTestData.*;
+import static project.voting.RestaurantTestData.restaurant3;
+import static project.voting.UserTestData.USER_MAIL;
 import static project.voting.VoteTestData.*;
-import static project.voting.web.vote.VoteProfileRestController.REST_URL;
+import static project.voting.util.VoteUtil.FINAL_TIME;
+import static project.voting.util.VoteUtil.createNewFromTo;
+import static project.voting.web.vote.ProfileVoteController.REST_URL;
 
-class VoteProfileRestControllerTest extends AbstractControllerTest {
+class ProfileVoteControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = REST_URL + "/";
 
     @Autowired
-    VoteService voteService;
+    VoteService service;
+
+    @Autowired
+    VoteRepository voteRepository;
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void updateBefore() throws Exception {
+        if (LocalTime.now().isBefore(FINAL_TIME)) {
+            VoteTo updatedTo = VoteTestData.getUpdated();
+            Vote vote = createNewFromTo(updatedTo);
+            vote.setRestaurant(restaurant3);
+            vote.setId(updatedTo.id());
+            perform(MockMvcRequestBuilders.put(REST_URL_SLASH + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
+                    .content(JsonUtil.writeValue(updatedTo)))
+                    .andDo(print())
+                    .andExpect(status().isNoContent());
+
+            VOTE_WITH_RESTAURANT_MATCHER.assertMatch(voteRepository.getWithRestaurant(VOTE1_ID).orElseThrow(), vote);
+        }
+    }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
@@ -34,7 +63,7 @@ class VoteProfileRestControllerTest extends AbstractControllerTest {
                 .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> voteService.get(VOTE1_ID, USER1_ID));
+        assertThrows(NotFoundException.class, () -> voteRepository.getExisted(VOTE1_ID));
     }
 
     @Test
@@ -42,7 +71,7 @@ class VoteProfileRestControllerTest extends AbstractControllerTest {
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + VOTE2_ID)
                 .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -62,12 +91,12 @@ class VoteProfileRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + VOTE2_ID)
                 .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isConflict());
     }
 
     @Test
     void getUnauth() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH+ VOTE1_ID)
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + VOTE1_ID)
                 .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
                 .andExpect(status().isUnauthorized());
     }

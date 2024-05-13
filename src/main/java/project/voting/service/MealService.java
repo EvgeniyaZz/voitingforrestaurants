@@ -1,46 +1,33 @@
 package project.voting.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
+import org.springframework.transaction.annotation.Transactional;
 import project.voting.model.Meal;
-import project.voting.repository.meal.MealRepository;
-
-import java.util.List;
-
-import static project.voting.util.ValidationUtil.checkNotFoundWithId;
+import project.voting.repository.MealRepository;
+import project.voting.repository.RestaurantRepository;
 
 @Service
+@AllArgsConstructor
 public class MealService {
 
     private final MealRepository mealRepository;
-
-    public MealService(MealRepository mealRepository) {
-        this.mealRepository = mealRepository;
-    }
+    private final RestaurantRepository restaurantRepository;
 
     @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
-    public Meal create(Meal meal, int restaurantId) {
-        Assert.notNull(meal, "meal must not be null");
-        return mealRepository.save(meal, restaurantId);
+    @Transactional
+    public Meal save(Meal meal, int restaurantId) {
+        if(meal.isNew()) {
+            meal.setRestaurant(restaurantRepository.getExisted(restaurantId));
+        }
+        return mealRepository.save(meal);
     }
 
-    @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
-    public void update(Meal meal, int restaurantId) {
-        Assert.notNull(meal, "meal must not be null");
-        checkNotFoundWithId(mealRepository.save(meal, restaurantId), meal.id());
-    }
-
-    @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
-    public void delete(int id, int restaurantId) {
-        checkNotFoundWithId(mealRepository.delete(id, restaurantId), id);
-    }
-
-    public Meal get(int id, int restaurantId) {
-        return checkNotFoundWithId(mealRepository.get(id, restaurantId), id);
-    }
-
-    public List<Meal> getAll(int restaurantId) {
-        return mealRepository.getAll(restaurantId);
+    @Transactional
+    public Meal getWithRestaurant(int id, int restaurantId) {
+        Meal meal = mealRepository.getBelonged(id, restaurantId);
+        meal.setRestaurant(restaurantRepository.getExisted(restaurantId));
+        return meal;
     }
 }

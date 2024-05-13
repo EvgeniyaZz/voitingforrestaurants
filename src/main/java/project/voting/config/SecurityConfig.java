@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import project.voting.model.Role;
 import project.voting.model.User;
-import project.voting.repository.user.UserRepository;
+import project.voting.repository.UserRepository;
 
 import java.util.Optional;
 

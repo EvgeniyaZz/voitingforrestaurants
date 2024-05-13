@@ -1,5 +1,7 @@
 package project.voting.web.user;
 
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -7,20 +9,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import project.voting.model.User;
 
-import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static project.voting.util.ValidationUtil.assureIdConsistent;
+import static project.voting.util.ValidationUtil.checkNew;
+
 @RestController
-@RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class AdminRestController extends AbstractUserController{
+@RequestMapping(value = AdminUserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class AdminUserController extends AbstractUserController{
 
     public static final String REST_URL = "/api/admin/users";
 
-    @Override
     @GetMapping
     public List<User> getAll() {
-        return super.getAll();
+        log.info("getAll");
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
     @Override
@@ -31,7 +35,9 @@ public class AdminRestController extends AbstractUserController{
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
-        User created = super.create(user);
+        log.info("create {}", user);
+        checkNew(user);
+        User created = repository.prepareAndSave(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -45,23 +51,30 @@ public class AdminRestController extends AbstractUserController{
         super.delete(id);
     }
 
-    @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
-        super.update(user, id);
+        log.info("update {} with id={}", user, id);
+        assureIdConsistent(user, id);
+        repository.prepareAndSave(user);
     }
 
-    @Override
     @GetMapping("/by-email")
     public User getByMail(@RequestParam String email) {
-        return super.getByMail(email);
+        log.info("getByEmail {}", email);
+        return repository.getExistedByEmail(email);
     }
 
-    @Override
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void enable(@PathVariable int id, @RequestParam boolean enabled) {
-        super.enable(id, enabled);
+        log.info(enabled ? "enable {}" : "disable {}", id);
+        User user = repository.getExisted(id);
+        user.setEnabled(enabled);
+    }
+
+    @GetMapping("/{id}/with-votes")
+    public ResponseEntity<User> getWithVotes(@PathVariable int id) {
+        return super.getWithVotes(id);
     }
 }

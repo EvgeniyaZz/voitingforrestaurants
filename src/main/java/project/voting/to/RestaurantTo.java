@@ -1,25 +1,15 @@
 package project.voting.to;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import project.voting.HasId;
 
-@Getter
-@Setter
-public class RestaurantTo extends BaseTo implements HasId {
-
-    @NotBlank
-    @Size(min = 2, max = 128)
-    String name;
-
-    public RestaurantTo() {
-    }
+@Value
+@EqualsAndHashCode(callSuper = true)
+public class RestaurantTo extends NamedTo implements HasId {
 
     public RestaurantTo(Integer id, String name) {
-        super(id);
-        this.name = name;
+        super(id, name);
     }
 
     @Override
