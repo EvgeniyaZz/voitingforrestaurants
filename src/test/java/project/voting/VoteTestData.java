@@ -36,13 +36,4 @@ public class VoteTestData {
     public static VoteTo getUpdated() {
         return new VoteTo(null, RESTAURANT3_ID, null);
     }
-
-    public static LocalTime checkTestTime(boolean isBefore) {
-        if (LocalTime.now().isAfter(FINAL_TIME) && isBefore) {
-            return FINAL_TIME.minusMinutes(5);
-        } else if(LocalTime.now().isBefore(FINAL_TIME) && !isBefore) {
-            return FINAL_TIME.plusMinutes(5);
-        }
-        return LocalTime.now();
-    }
 }

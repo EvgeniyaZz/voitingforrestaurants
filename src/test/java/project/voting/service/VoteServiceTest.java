@@ -18,6 +18,7 @@ import static org.mockito.Mockito.mockStatic;
 import static project.voting.RestaurantTestData.restaurant3;
 import static project.voting.UserTestData.*;
 import static project.voting.VoteTestData.*;
+import static project.voting.util.VoteUtil.FINAL_TIME;
 
 class VoteServiceTest extends AbstractServiceTest {
 
@@ -42,12 +43,15 @@ class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     void updateBefore() {
-        testTime = checkTestTime(true);
-
         VoteTo updatedTo = VoteTestData.getUpdated();
 
-        try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
-            mocked.when(LocalTime::now).thenReturn(testTime);
+        if(LocalTime.now().isAfter(FINAL_TIME)) {
+            testTime = FINAL_TIME.minusMinutes(5);
+            try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+                mocked.when(LocalTime::now).thenReturn(testTime);
+                service.update(updatedTo, VOTE1_ID, USER1_ID);
+            }
+        } else {
             service.update(updatedTo, VOTE1_ID, USER1_ID);
         }
 
@@ -63,12 +67,15 @@ class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     void updateAfter() {
-        testTime = checkTestTime(false);
-
         VoteTo updatedTo = VoteTestData.getUpdated();
 
-        try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
-            mocked.when(LocalTime::now).thenReturn(testTime);
+        if(LocalTime.now().isBefore(FINAL_TIME)) {
+            testTime = FINAL_TIME.plusMinutes(5);
+            try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+                mocked.when(LocalTime::now).thenReturn(testTime);
+                assertThrows(ResponseStatusException.class, () -> service.update(updatedTo, VOTE1_ID, USER1_ID));
+            }
+        } else {
             assertThrows(ResponseStatusException.class, () -> service.update(updatedTo, VOTE1_ID, USER1_ID));
         }
     }

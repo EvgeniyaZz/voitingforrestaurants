@@ -28,6 +28,7 @@ import static project.voting.RestaurantTestData.RESTAURANT1_ID;
 import static project.voting.RestaurantTestData.restaurant3;
 import static project.voting.UserTestData.*;
 import static project.voting.VoteTestData.*;
+import static project.voting.util.VoteUtil.FINAL_TIME;
 import static project.voting.web.json.JsonUtil.writeValue;
 import static project.voting.web.vote.ProfileVoteController.REST_URL;
 
@@ -66,16 +67,16 @@ class ProfileVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateBefore() throws Exception {
-        testTime = checkTestTime(true);
-
         VoteTo updatedTo = VoteTestData.getUpdated();
 
-        try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
-            mocked.when(LocalTime::now).thenReturn(testTime);
-            perform(MockMvcRequestBuilders.put(REST_URL_SLASH + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
-                    .content(JsonUtil.writeValue(updatedTo)))
-                    .andDo(print())
-                    .andExpect(status().isNoContent());
+        if (LocalTime.now().isAfter(FINAL_TIME)) {
+            testTime = FINAL_TIME.minusMinutes(5);
+            try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+                mocked.when(LocalTime::now).thenReturn(testTime);
+                doUpdate(updatedTo).andExpect(status().isNoContent());
+            }
+        } else {
+            doUpdate(updatedTo).andExpect(status().isNoContent());
         }
 
         Vote vote = new Vote(null, LocalDate.now());
@@ -89,17 +90,23 @@ class ProfileVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateAfter() throws Exception {
-        testTime = checkTestTime(false);
-
         VoteTo updatedTo = VoteTestData.getUpdated();
 
-        try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
-            mocked.when(LocalTime::now).thenReturn(testTime);
-            perform(MockMvcRequestBuilders.put(REST_URL_SLASH + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
-                    .content(JsonUtil.writeValue(updatedTo)))
-                    .andDo(print())
-                    .andExpect(status().isUnprocessableEntity());
+        if (LocalTime.now().isBefore(FINAL_TIME)) {
+            testTime = FINAL_TIME.plusMinutes(5);
+            try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+                mocked.when(LocalTime::now).thenReturn(testTime);
+                doUpdate(updatedTo).andExpect(status().isUnprocessableEntity());
+            }
+        } else {
+            doUpdate(updatedTo).andExpect(status().isUnprocessableEntity());
         }
+    }
+
+    private ResultActions doUpdate(VoteTo updatedTo) throws Exception {
+        return perform(MockMvcRequestBuilders.put(REST_URL_SLASH + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andDo(print());
     }
 
     @Test
