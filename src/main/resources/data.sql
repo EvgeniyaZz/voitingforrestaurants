@@ -2,8 +2,8 @@ SET REFERENTIAL_INTEGRITY FALSE ;
 
 TRUNCATE TABLE user_role RESTART IDENTITY;
 TRUNCATE TABLE vote RESTART IDENTITY;
-TRUNCATE TABLE  users RESTART IDENTITY;
-TRUNCATE TABLE meal RESTART IDENTITY;
+TRUNCATE TABLE users RESTART IDENTITY;
+TRUNCATE TABLE dish RESTART IDENTITY;
 TRUNCATE TABLE restaurant RESTART IDENTITY;
 
 SET REFERENTIAL_INTEGRITY TRUE;
@@ -24,7 +24,7 @@ VALUES ('Restaurant Schengen'),
        ('Brisket Eat & Fun'),
        ('Smoke BBQ');
 
-INSERT INTO meal (name, price, restaurant_id)
+INSERT INTO dish (name, price, restaurant_id)
 VALUES ('Средиземноморский суп с морепродуктами', 670, 1),
        ('Палтус с цветной капустой и миндальным соусом', 780, 1),
        ('Бриошь с камамбером', 350, 1),

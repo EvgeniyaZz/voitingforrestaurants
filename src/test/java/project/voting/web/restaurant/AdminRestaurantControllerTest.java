@@ -14,8 +14,6 @@ import project.voting.util.RestaurantUtil;
 import project.voting.util.exception.NotFoundException;
 import project.voting.web.AbstractControllerTest;
 
-import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -124,34 +122,22 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getWithMeals() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT1_ID + "/with-meals"))
+    void getWithDishes() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT1_ID + "/with-dishes"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_WITH_MENU_MATCHER.contentJson(restaurant1));
+                .andExpect(RESTAURANT_WITH_DISHES_MATCHER.contentJson(restaurant1));
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getByDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "date")
-                .param("added", LocalDate.now().toString()))
+    void getAllWithDishesToday() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "/with-dishes/today"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant2, restaurant1, restaurant3));
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void getWithMealsByDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "with-meals/date")
-                .param("added", LocalDate.now().toString()))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_WITH_MENU_MATCHER.contentJson(restaurant2, restaurant1, restaurant3));
+                .andExpect(RESTAURANT_WITH_DISHES_MATCHER.contentJson(restaurant1, restaurant2, restaurant3));
     }
 
     @Test

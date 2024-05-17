@@ -1,12 +1,12 @@
 package project.voting.web.restaurant;
 
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import project.voting.model.Restaurant;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,20 +22,14 @@ public class RestaurantController extends AbstractRestaurantController {
     }
 
     @Override
-    @GetMapping("/{id}/with-meals")
-    public ResponseEntity<Restaurant> getWithMeals(@PathVariable int id) {
-        return super.getWithMeals(id);
+    @GetMapping("/{id}/with-dishes")
+    public Restaurant getWithDishes(@PathVariable int id) {
+        return super.getWithDishes(id);
     }
 
     @Override
-    @GetMapping("/date")
-    public List<Restaurant> getByDate(@RequestParam @Nullable LocalDate added) {
-        return super.getByDate(added);
-    }
-
-    @Override
-    @GetMapping("/with-meals/date")
-    public List<Restaurant> getWithMealsByDate(@RequestParam @Nullable LocalDate added) {
-        return super.getWithMealsByDate(added);
+    @GetMapping("/with-dishes/today")
+    public List<Restaurant> getAllWithDishesToday() {
+        return super.getAllWithDishesToday();
     }
 }

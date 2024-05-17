@@ -3,10 +3,9 @@ package project.voting.web.restaurant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
 import project.voting.model.Restaurant;
 import project.voting.repository.RestaurantRepository;
+import project.voting.service.RestaurantService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,24 +17,26 @@ public class AbstractRestaurantController {
     @Autowired
     protected RestaurantRepository repository;
 
+    @Autowired
+    private RestaurantService service;
+
     public Restaurant get(int id) {
         log.info("get restaurant {}", id);
         return repository.getExisted(id);
     }
 
-    public ResponseEntity<Restaurant> getWithMeals(int id) {
-        log.info("get restaurant {} with meals", id);
-        return ResponseEntity.of(repository.getWithMeals(id));
+    public Restaurant getWithDishes(int id) {
+        log.info("get restaurant {} with dishes", id);
+        return repository.getExistedWithDishes(id);
     }
 
-    public List<Restaurant> getByDate(LocalDate added) {
-        log.info("get restaurants by date {}", added);
-        return repository.getByDate(added);
+    public Restaurant getWithDishesByDate(int id, LocalDate date) {
+        log.info("get restaurant {} with dishes by date {}", id, date);
+        return service.getWithDishesByDate(id, date);
     }
 
-    @Cacheable(value = "restaurantsWithMenu", key = "#added")
-    public List<Restaurant> getWithMealsByDate(LocalDate added) {
-        log.info("get restaurants with meals by date {}", added);
-        return repository.getWithMealsByDate(added);
+    public List<Restaurant> getAllWithDishesToday() {
+        log.info("get all restaurants with dishes for today");
+        return service.getAllWithDishesByDate(LocalDate.now());
     }
 }

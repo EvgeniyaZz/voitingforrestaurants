@@ -9,9 +9,9 @@
         <relativePath/>
     </parent>
     <version>1.0</version>
-    <groupId>myproject</groupId>
+    <groupId>com.github.EvgeniyaZz</groupId>
     <artifactId>voting</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>Voting for restaurants</name>
 

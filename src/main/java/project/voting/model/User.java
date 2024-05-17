@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.NonNull;
@@ -19,6 +21,8 @@ import java.util.*;
 @Setter
 @Getter
 @Entity
+@ToString(callSuper = true, exclude = {"password", "registered", "votes"})
+@NoArgsConstructor
 @Table(name = "users")
 public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
@@ -56,9 +60,6 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
     @Schema(hidden = true)
     private List<Vote> votes;
 
-    public User() {
-    }
-
     public User(User user) {
         this(user.id, user.name, user.email, user.password, user.enabled, user.registered, user.roles);
     }
@@ -78,16 +79,5 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     public void setRoles(Collection<Role> roles) {
         this.roles = roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", enabled=" + enabled +
-                ", roles=" + roles +
-                '}';
     }
 }

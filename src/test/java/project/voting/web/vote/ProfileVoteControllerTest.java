@@ -1,32 +1,34 @@
 package project.voting.web.vote;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import project.voting.VoteTestData;
 import project.voting.model.Vote;
 import project.voting.repository.VoteRepository;
 import project.voting.service.VoteService;
 import project.voting.to.VoteTo;
-import project.voting.util.exception.NotFoundException;
 import project.voting.web.AbstractControllerTest;
 import project.voting.web.json.JsonUtil;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static project.voting.RestaurantTestData.RESTAURANT1_ID;
 import static project.voting.RestaurantTestData.restaurant3;
-import static project.voting.UserTestData.USER_MAIL;
+import static project.voting.UserTestData.*;
 import static project.voting.VoteTestData.*;
-import static project.voting.util.VoteUtil.FINAL_TIME;
-import static project.voting.util.VoteUtil.createNewFromTo;
+import static project.voting.web.json.JsonUtil.writeValue;
 import static project.voting.web.vote.ProfileVoteController.REST_URL;
 
 class ProfileVoteControllerTest extends AbstractControllerTest {
@@ -37,41 +39,67 @@ class ProfileVoteControllerTest extends AbstractControllerTest {
     VoteService service;
 
     @Autowired
-    VoteRepository voteRepository;
+    VoteRepository repository;
+
+    private LocalTime testTime;
+
+    @Test
+    @WithUserDetails(value = USER2_MAIL)
+    void createWithLocation() throws Exception {
+        VoteTo newVoteTo = VoteTestData.getNew();
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(newVoteTo)))
+                .andDo(print())
+                .andExpect(status().isCreated());
+
+        Vote created = VOTE_MATCHER.readFromJson(action);
+
+        int newId = created.id();
+        Vote newVote = new Vote(null, LocalDate.now());
+        newVote.setId(newId);
+
+        VOTE_MATCHER.assertMatch(created, newVote);
+        VOTE_MATCHER.assertMatch(repository.getExisted(newId), newVote);
+    }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateBefore() throws Exception {
-        if (LocalTime.now().isBefore(FINAL_TIME)) {
-            VoteTo updatedTo = VoteTestData.getUpdated();
-            Vote vote = createNewFromTo(updatedTo);
-            vote.setRestaurant(restaurant3);
-            vote.setId(updatedTo.id());
+        testTime = checkTestTime(true);
+
+        VoteTo updatedTo = VoteTestData.getUpdated();
+
+        try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+            mocked.when(LocalTime::now).thenReturn(testTime);
             perform(MockMvcRequestBuilders.put(REST_URL_SLASH + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
                     .content(JsonUtil.writeValue(updatedTo)))
                     .andDo(print())
                     .andExpect(status().isNoContent());
-
-            VOTE_WITH_RESTAURANT_MATCHER.assertMatch(voteRepository.getWithRestaurant(VOTE1_ID).orElseThrow(), vote);
         }
+
+        Vote vote = new Vote(null, LocalDate.now());
+        vote.setRestaurant(restaurant3);
+        vote.setId(VOTE1_ID);
+        vote.setUser(user1);
+
+        VOTE_WITH_ID_RESTAURANT_USER_MATCHER.assertMatch(repository.getBelonged(VOTE1_ID, USER1_ID), vote);
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
-    void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + VOTE1_ID)
-                .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> voteRepository.getExisted(VOTE1_ID));
-    }
+    void updateAfter() throws Exception {
+        testTime = checkTestTime(false);
 
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + VOTE2_ID)
-                .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
-                .andExpect(status().isConflict());
+        VoteTo updatedTo = VoteTestData.getUpdated();
+
+        try (MockedStatic<LocalTime> mocked = mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS)) {
+            mocked.when(LocalTime::now).thenReturn(testTime);
+            perform(MockMvcRequestBuilders.put(REST_URL_SLASH + VOTE1_ID).contentType(MediaType.APPLICATION_JSON)
+                    .content(JsonUtil.writeValue(updatedTo)))
+                    .andDo(print())
+                    .andExpect(status().isUnprocessableEntity());
+        }
     }
 
     @Test

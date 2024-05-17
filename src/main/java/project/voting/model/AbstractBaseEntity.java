@@ -4,12 +4,14 @@ import lombok.*;
 import project.voting.HasId;
 
 import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Getter
 @Setter
 @MappedSuperclass
 @Access(AccessType.FIELD)
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractBaseEntity implements HasId {
@@ -29,10 +31,5 @@ public abstract class AbstractBaseEntity implements HasId {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + ":" + id;
     }
 }

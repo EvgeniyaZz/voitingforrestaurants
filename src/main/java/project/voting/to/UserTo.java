@@ -4,11 +4,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.Value;
 import project.voting.HasIdAndEmail;
 import project.voting.util.NoHtml;
 
 @Value
+@ToString(callSuper = true, exclude = "password")
 @EqualsAndHashCode(callSuper = true)
 public class UserTo extends NamedTo implements HasIdAndEmail {
 
@@ -26,10 +28,5 @@ public class UserTo extends NamedTo implements HasIdAndEmail {
         super(id, name);
         this.email = email;
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "UserTo:" + id + '[' + email + ']';
     }
 }

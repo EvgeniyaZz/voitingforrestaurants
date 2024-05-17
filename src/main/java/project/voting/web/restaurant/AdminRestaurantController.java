@@ -26,7 +26,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
 
     public static final String REST_URL = "/api/admin/restaurants";
 
-    @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
+    @CacheEvict(value = "restaurantsWithDishesByDate", allEntries = true)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody RestaurantTo restaurantTo) {
         log.info("create restaurant {}", restaurantTo);
@@ -39,7 +39,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
+    @CacheEvict(value = "restaurantsWithDishesByDate", allEntries = true)
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {
@@ -47,7 +47,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
         repository.save(updateFromTo(repository.getExisted(id), restaurantTo));
     }
 
-    @CacheEvict(value = "restaurantsWithMenu", allEntries = true)
+    @CacheEvict(value = "restaurantsWithDishesByDate", allEntries = true)
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -62,25 +62,27 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     }
 
     @Override
-    @GetMapping("/{id}/with-meals")
-    public ResponseEntity<Restaurant> getWithMeals(@PathVariable int id) {
-        return super.getWithMeals(id);
+    @GetMapping("/{id}/with-dishes")
+    public Restaurant getWithDishes(@PathVariable int id) {
+        return super.getWithDishes(id);
+    }
+
+    @Override
+    @GetMapping("/{id}/with-dishes/by-date")
+    public Restaurant getWithDishesByDate(@PathVariable int id,
+                                          @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return super.getWithDishesByDate(id, date);
     }
 
     @GetMapping
     public List<Restaurant> getAll() {
-        return repository.getAll();
+        log.info("get all restaurants");
+        return repository.findAll();
     }
 
     @Override
-    @GetMapping("/date")
-    public List<Restaurant> getByDate(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate added) {
-        return super.getByDate(added);
-    }
-
-    @Override
-    @GetMapping("/with-meals/date")
-    public List<Restaurant> getWithMealsByDate(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate added) {
-        return super.getWithMealsByDate(added);
+    @GetMapping("/with-dishes/today")
+    public List<Restaurant> getAllWithDishesToday() {
+        return super.getAllWithDishesToday();
     }
 }

@@ -38,7 +38,7 @@ spring:
 
   # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
   cache:
-    cache-names: restaurantsWithMenu
+    cache-names: restaurantsWithDishesByDate
     caffeine.spec: maximumSize=200,expireAfterAccess=1d
 
 logging:
@@ -52,5 +52,9 @@ server.servlet:
     charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly
     enabled: true # Enable http encoding support
     force: true
+
+server:
+  error:
+    include-message: always
 
 springdoc.swagger-ui.path: /swagger-ui/index.html

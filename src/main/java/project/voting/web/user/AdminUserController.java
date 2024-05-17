@@ -27,10 +27,10 @@ public class AdminUserController extends AbstractUserController{
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
-    @Override
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
-        return super.get(id);
+        log.info("get {}", id);
+        return repository.getExisted(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -71,10 +71,5 @@ public class AdminUserController extends AbstractUserController{
         log.info(enabled ? "enable {}" : "disable {}", id);
         User user = repository.getExisted(id);
         user.setEnabled(enabled);
-    }
-
-    @GetMapping("/{id}/with-votes")
-    public ResponseEntity<User> getWithVotes(@PathVariable int id) {
-        return super.getWithVotes(id);
     }
 }
