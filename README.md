@@ -1,4 +1,17 @@
-A technical requirement:
+# Voting for restaurants
+
+A Java backend project with registration/authorization and role-based access rights (USER, ADMINISTRATOR). The administrator can create/edit/delete users, restaurants and restaurant dishes (dishes are updated every day). Users can manage their profile and vote for the restaurant (choose where they want to have lunch today). The user can also change his vote for today if the time is before 11:00.
+
+## Tools
+
+- JDK 21
+- Spring Boot 3.2.5
+- Lombok
+- H2
+- Caffeine Cache
+- Swagger/OpenAPI 3.0
+
+## Technical requirement
 
 Design and implement a REST API using Hibernate/Spring/SpringMVC (Spring-Boot preferred!) without frontend.
 
@@ -23,16 +36,15 @@ couple curl commands to test it (better - link to Swagger).
 -------------------------------------------------------------
 
 P.S.: Make sure everything works with the latest version that is on github :)
-P.P.S.: Assume that your API will be used by a frontend developer to build frontend on top of that.
+P.S.: Assume that your API will be used by a frontend developer to build frontend on top of that.
 
--------------------------------------------------------------
+## Run
 
-- Stack: JDK 21, Spring Boot 3.2.5, Lombok, H2, Caffeine Cache, Swagger/OpenAPI 3.0
-- Run: `mvn spring-boot:run` in root directory.
+`mvn spring-boot:run` in root directory.
+
 -----------------------------------------------------
 [REST API documentation](http://localhost:8080/swagger-ui/index.html)  
 Credentials:
-
 ```
 Admin: admin@gmail.com / admin
 User:  user@yandex.ru / password
